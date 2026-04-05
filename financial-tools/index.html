@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brett & Abbie — Financial Planner</title>
+  <style>
+    :root {
+      --green: #1a5c2a;
+      --green-light: #e8f5e9;
+      --blue: #1565c0;
+      --blue-light: #e3f2fd;
+      --gold: #b8860b;
+      --gold-light: #fffde7;
+      --red: #c62828;
+      --red-light: #ffebee;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --border: #ddd;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a5c2a, #2e7d32);
+      color: white;
+      padding: 20px 20px 16px;
+      text-align: center;
+    }
+
+    header h1 { font-size: clamp(1.1rem, 4vw, 1.5rem); font-weight: 700; margin-bottom: 4px; }
+    header p { opacity: 0.85; font-size: 0.8rem; }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: var(--card);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 13px 8px;
+      border: none;
+      background: transparent;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .tab-btn:hover:not(.active) { background: #f9f9f9; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .card-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Inputs */
+    .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .input-group { display: flex; flex-direction: column; gap: 3px; }
+    .input-group.full { grid-column: 1 / -1; }
+    .input-group label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
+    .input-group input, .input-group select {
+      padding: 7px 9px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      background: white;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+    .input-group input:focus, .input-group select:focus { border-color: var(--green); }
+    .input-group input[type="number"] { -moz-appearance: textfield; }
+    .input-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    /* Summary strip */
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .summary-item {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 14px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .summary-item .num { font-size: 1.3rem; font-weight: 800; }
+    .summary-item.green .num { color: var(--green); }
+    .summary-item.blue .num { color: var(--blue); }
+    .summary-item.gold .num { color: var(--gold); }
+    .summary-item.red .num { color: var(--red); }
+
+    .summary-item .lbl {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .data-table th {
+      text-align: left;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 8px 6px;
+      border-bottom: 2px solid var(--border);
+      background: #fafafa;
+    }
+    .data-table th:not(:first-child) { text-align: right; }
+    .data-table td { padding: 8px 6px; border-bottom: 1px solid #f0f0f0; }
+    .data-table td:not(:first-child) { text-align: right; }
+    .data-table tr:nth-child(even) td { background: #fafafa; }
+    .data-table tr.section-head td {
+      background: #eee;
+      font-weight: 700;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+    .data-table tr.total td { font-weight: 800; border-top: 2px solid var(--border); background: var(--green-light) !important; color: var(--green); }
+    .data-table tr.warning td { background: var(--red-light) !important; color: var(--red); font-weight: 700; }
+    .data-table tr.healthy td { color: var(--green); font-weight: 600; }
+
+    /* Insight */
+    .insight-box { background: var(--green-light); border: 1px solid var(--green); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+    .insight-box h3 { font-size: 0.82rem; color: var(--green); font-weight: 700; margin-bottom: 6px; }
+    .insight-box p { font-size: 0.85rem; color: #333; line-height: 1.7; }
+
+    /* Scenario switcher */
+    .scenario-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .scen-btn {
+      padding: 8px 16px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: white;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .scen-btn.active { border-color: var(--green); background: var(--green-light); color: var(--green); }
+    .scen-btn:hover:not(.active) { border-color: var(--green); }
+
+    /* Timeline events */
+    .event-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      background: #f9f9f7;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      font-size: 0.82rem;
+    }
+
+    .event-row .month {
+      font-weight: 700;
+      min-width: 60px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+    }
+
+    .event-row .event { flex: 1; }
+    .event-row .amount { font-weight: 700; color: var(--red); }
+
+    .event-row.positive .amount { color: var(--green); }
+
+    /* Footer */
+    footer { text-align: center; padding: 20px 16px; font-size: 0.7rem; color: var(--text-muted); }
+
+    @media (max-width: 700px) {
+      .summary-strip { grid-template-columns: repeat(2, 1fr); }
+      .input-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .input-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💰 Brett & Abbie — Financial Planner</h1>
+  <p>Year-by-year: wedding, house, savings, and retirement</p>
+</header>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('wedding')">💒 Wedding</button>
+  <button class="tab-btn" onclick="switchTab('house')">🏠 House Decision</button>
+  <button class="tab-btn" onclick="switchTab('monthly')">📅 Monthly Cash Flow</button>
+  <button class="tab-btn" onclick="switchTab('retirement')">📈 Retirement</button>
+</div>
+
+<div class="container">
+
+  <!-- ========== WEDDING TAB ========== -->
+  <div class="tab-content active" id="tab-wedding">
+
+    <div class="summary-strip">
+      <div class="summary-item green">
+        <div class="num" id="w-start">$73,270</div>
+        <div class="lbl">Starting Savings</div>
+      </div>
+      <div class="summary-item red">
+        <div class="num" id="w-wedding-cost">—</div>
+        <div class="lbl">Wedding Cost</div>
+      </div>
+      <div class="summary-item gold">
+        <div class="num" id="w-savings-after">—</div>
+        <div class="lbl">Savings After Wedding</div>
+      </div>
+      <div class="summary-item blue">
+        <div class="num" id="w-monthly-save">$4,817</div>
+        <div class="lbl">Monthly Net Savings</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💒 Wedding & One-Time Costs</div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Starting Savings</label>
+          <input type="number" id="w-start-input" value="73270" oninput="calcWedding()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Net Savings (before wedding costs)</label>
+          <input type="number" id="w-monthly-input" value="4817" oninput="calcWedding()">
+        </div>
+        <div class="input-group">
+          <label>Wedding Month</label>
+          <select id="w-wedding-month" onchange="calcWedding()">
+            <option value="1">January 2027</option>
+            <option value="2">February 2027</option>
+            <option value="3">March 2027</option>
+            <option value="4">April 2027</option>
+            <option value="5">May 2027</option>
+            <option value="6">June 2027</option>
+            <option value="7">July 2027</option>
+            <option value="8">August 2027</option>
+            <option value="9">September 2027</option>
+            <option value="10">October 2027</option>
+            <option value="11">November 2027</option>
+            <option value="12">December 2027</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Wedding Cost (vendor deposits, dress, etc.)</label>
+          <input type="number" id="w-cost-input" value="20000" oninput="calcWedding()">
+        </div>
+        <div class="input-group">
+          <label>Honeymoon Cost</label>
+          <input type="number" id="w-honeymoon-input" value="5000" oninput="calcWedding()">
+        </div>
+        <div class="input-group">
+          <label>Emergency Fund Target (months of expenses)</label>
+          <input type="number" id="w-ef-months" value="6" min="1" max="12" oninput="calcWedding()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Expenses (no housing)</label>
+          <input type="number" id="w-expenses-input" value="2818" oninput="calcWedding()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Net Income</label>
+          <input type="number" id="w-income-input" value="7635" oninput="calcWedding()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 Savings Timeline — January 2027 to Wedding Month</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="w-table"></table>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <h3>💡 What This Means</h3>
+      <p id="w-insight">Adjust the numbers to see your savings picture before and after the wedding.</p>
+    </div>
+  </div>
+
+  <!-- ========== HOUSE TAB ========== -->
+  <div class="tab-content" id="tab-house">
+
+    <div class="scenario-tabs">
+      <button class="scen-btn active" onclick="setHouseScenario('buy-now')">🏠 Buy Now (Jan 2027)</button>
+      <button class="scen-btn" onclick="setHouseScenario('rent-6mo')">📦 Rent 6 Months, Then Buy</button>
+      <button class="scen-btn" onclick="setHouseScenario('rent-12mo')">📦 Rent 12 Months, Then Buy</button>
+    </div>
+
+    <div class="summary-strip">
+      <div class="summary-item green">
+        <div class="num" id="h-savings-after-buy">—</div>
+        <div class="lbl">Savings After Purchase</div>
+      </div>
+      <div class="summary-item gold">
+        <div class="num" id="h-monthly-housing">—</div>
+        <div class="lbl">Monthly Housing Cost</div>
+      </div>
+      <div class="summary-item blue">
+        <div class="num" id="h-monthly-savings">—</div>
+        <div class="lbl">Monthly Net Savings (after housing)</div>
+      </div>
+      <div class="summary-item red">
+        <div class="num" id="h-cushion">—</div>
+        <div class="lbl">Cash Cushion After Purchase</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏠 Purchase Assumptions</div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Savings at Purchase Time</label>
+          <input type="number" id="h-savings-input" value="50000" oninput="calcHouse()">
+        </div>
+        <div class="input-group">
+          <label>House Price</label>
+          <input type="number" id="h-price-input" value="300000" oninput="calcHouse()">
+        </div>
+        <div class="input-group">
+          <label>Down Payment %</label>
+          <input type="number" id="h-down-pct" value="20" min="3" max="50" oninput="calcHouse()"> %
+        </div>
+        <div class="input-group">
+          <label>Interest Rate %</label>
+          <input type="number" id="h-rate-input" value="6.5" min="1" max="15" step="0.125" oninput="calcHouse()"> %
+        </div>
+        <div class="input-group">
+          <label>Closing Costs %</label>
+          <input type="number" id="h-closing-pct" value="2" min="1" max="5" step="0.5" oninput="calcHouse()"> %
+        </div>
+        <div class="input-group">
+          <label>Property Tax / year</label>
+          <input type="number" id="h-tax-input" value="7000" oninput="calcHouse()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Rent (if renting first)</label>
+          <input type="number" id="h-rent-input" value="1400" oninput="calcHouse()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Net Savings (before housing)</label>
+          <input type="number" id="h-net-save-input" value="4817" oninput="calcHouse()">
+        </div>
+        <div class="input-group">
+          <label>Emergency Fund Target</label>
+          <input type="number" id="h-ef-input" value="16908" oninput="calcHouse()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 Month-by-Month Comparison (<span id="h-scenario-label">Buy Now</span>)</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="h-table"></table>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <h3>💡 What This Means</h3>
+      <p id="h-insight">Select a scenario and adjust the numbers to compare options.</p>
+    </div>
+  </div>
+
+  <!-- ========== MONTHLY CASH FLOW TAB ========== -->
+  <div class="tab-content" id="tab-monthly">
+
+    <div class="card">
+      <div class="card-title">📊 Monthly Income & Expenses (from your spreadsheet)</div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Brett Monthly Net (avg)</label>
+          <input type="number" id="m-brett" value="5000" oninput="calcMonthly()">
+        </div>
+        <div class="input-group">
+          <label>Abbie Monthly Net</label>
+          <input type="number" id="m-abbie" value="3333" oninput="calcMonthly()">
+        </div>
+        <div class="input-group">
+          <label>Combined Monthly Net Income</label>
+          <input type="number" id="m-income" value="8333" oninput="calcMonthly()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Expenses (no housing)</label>
+          <input type="number" id="m-expenses" value="2818" oninput="calcMonthly()">
+        </div>
+        <div class="input-group">
+          <label>Monthly Net Savings</label>
+          <input type="number" id="m-savings-rate" value="5515" oninput="calcMonthly()">
+        </div>
+        <div class="input-group">
+          <label>Projection (months)</label>
+          <input type="number" id="m-months" value="60" min="12" max="120" oninput="calcMonthly()">
+        </div>
+        <div class="input-group">
+          <label>Starting Savings</label>
+          <input type="number" id="m-start" value="73270" oninput="calcMonthly()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 Monthly Cash Flow — Next 60 Months</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="m-table"></table>
+      </div>
+    </div>
+
+    <div class="summary-strip">
+      <div class="summary-item green">
+        <div class="num" id="m-savings-1yr">—</div>
+        <div class="lbl">Savings @ Year 1</div>
+      </div>
+      <div class="summary-item blue">
+        <div class="num" id="m-savings-3yr">—</div>
+        <div class="lbl">Savings @ Year 3</div>
+      </div>
+      <div class="summary-item gold">
+        <div class="num" id="m-savings-5yr">—</div>
+        <div class="lbl">Savings @ Year 5</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="m-savings-rate-disp">—</div>
+        <div class="lbl">Monthly Savings Rate</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== RETIREMENT TAB ========== -->
+  <div class="tab-content" id="tab-retirement">
+
+    <div class="card">
+      <div class="card-title">📈 Retirement Model (from your spreadsheet — simplified)</div>
+      <div class="input-grid">
+        <div class="input-group">
+          <label>Brett Starting Salary (gross)</label>
+          <input type="number" id="r-brett-salary" value="90500" oninput="calcRetirement()">
+        </div>
+        <div class="input-group">
+          <label>Abbie Starting Salary (gross)</label>
+          <input type="number" id="r-abbie-salary" value="40000" oninput="calcRetirement()">
+        </div>
+        <div class="input-group">
+          <label>Combined Savings Rate (401k + Roth %)</label>
+          <input type="number" id="r-savings-rate" value="15" min="5" max="40" step="1" oninput="calcRetirement()"> %
+        </div>
+        <div class="input-group">
+          <label>Employer 401k Match (Brett %)</label>
+          <input type="number" id="r-match" value="6" min="0" max="10" step="1" oninput="calcRetirement()"> %
+        </div>
+        <div class="input-group">
+          <label>Market Return</label>
+          <input type="number" id="r-return" value="7" min="1" max="15" step="0.5" oninput="calcRetirement()"> %
+        </div>
+        <div class="input-group">
+          <label>Current Retirement Savings</label>
+          <input type="number" id="r-current" value="15000" oninput="calcRetirement()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📅 Year-by-Year Retirement Projection (Brett age 24 → 65)</div>
+      <div style="overflow-x:auto;">
+        <table class="data-table" id="r-table"></table>
+      </div>
+    </div>
+
+    <div class="summary-strip">
+      <div class="summary-item green">
+        <div class="num" id="r-at-65">—</div>
+        <div class="lbl">Portfolio @ Age 65</div>
+      </div>
+      <div class="summary-item blue">
+        <div class="num" id="r-at-60">—</div>
+        <div class="lbl">Portfolio @ Age 60</div>
+      </div>
+      <div class="summary-item gold">
+        <div class="num" id="r-at-55">—</div>
+        <div class="lbl">Portfolio @ Age 55</div>
+      </div>
+      <div class="summary-item">
+        <div class="num" id="r-monthly-income">—</div>
+        <div class="lbl">Retirement Income/mo (@ 4% rule)</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <h3>💡 What This Means</h3>
+      <p id="r-insight">The 4% rule: multiply your portfolio by 0.04 and divide by 12 to get monthly sustainable income in retirement.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Based on your Future Budget Calculator · Assumptions: Brett $90,500 gross, Abbie $40,000 gross · Updated with your actual data<br>
+  Soli Deo Gloria 🙏
+</footer>
+
+<script>
+  // ===== TABS =====
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.querySelector('.tab-btn[onclick*="switchTab(\'' + tab + '\')"]').classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+
+  // ===== WEDDING CALCULATOR =====
+  function fmt(n) {
+    if (isNaN(n) || n === null) return '—';
+    if (Math.abs(n) >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 100000) return '$' + Math.round(n/1000).toFixed(0) + 'K';
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function fmtMo(n) { return '$' + Math.round(n).toLocaleString('en-US') + '/mo'; }
+
+  const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function calcWedding() {
+    const startSavings = parseFloat(document.getElementById('w-start-input').value) || 0;
+    const monthlySave = parseFloat(document.getElementById('w-monthly-input').value) || 0;
+    const weddingMonth = parseInt(document.getElementById('w-wedding-month').value) || 1;
+    const weddingCost = parseFloat(document.getElementById('w-cost-input').value) || 0;
+    const honeymoon = parseFloat(document.getElementById('w-honeymoon-input').value) || 0;
+    const efMonths = parseInt(document.getElementById('w-ef-months').value) || 6;
+    const monthlyExp = parseFloat(document.getElementById('w-expenses-input').value) || 0;
+    const income = parseFloat(document.getElementById('w-income-input').value) || 0;
+
+    const efTarget = efMonths * monthlyExp;
+    const totalOneTime = weddingCost + honeymoon;
+
+    document.getElementById('w-start').textContent = fmt(startSavings);
+    document.getElementById('w-wedding-cost').textContent = '−' + fmt(totalOneTime);
+    document.getElementById('w-monthly-save').textContent = fmtMo(monthlySave);
+
+    let table = `<thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net Savings</th><th>Total Savings</th><th>vs. Emergency Fund</th></tr></thead><tbody>`;
+
+    let savings = startSavings;
+    let rows = [];
+
+    for (let m = 1; m <= weddingMonth + 2; m++) {
+      const isWeddingMonth = m === weddingMonth;
+      const monthSavings = isWeddingMonth ? monthlySave - totalOneTime : monthlySave;
+      savings += monthSavings;
+
+      const monthName = MONTH_NAMES[(m-1) % 12] + (m > 12 ? ' \'27' : ' \'27');
+      const cushion = savings - efTarget;
+      const rowClass = cushion < 0 ? 'warning' : (cushion > efTarget * 0.5 ? 'healthy' : '');
+      const eventNote = isWeddingMonth ? ' 💒 Wedding + Honeymoon' : '';
+
+      rows.push({
+        month: monthName + eventNote,
+        income: income,
+        expenses: monthlyExp,
+        net: monthSavings,
+        total: savings,
+        cushion: cushion,
+        rowClass: rowClass
+      });
+    }
+
+    // Show only key months
+    const showIdx = [0, weddingMonth - 1, weddingMonth, weddingMonth + 1, weddingMonth + 2].filter((v, i, a) => a.indexOf(v) === i && v <= rows.length);
+
+    rows.forEach((r, idx) => {
+      if (!showIdx.includes(idx)) return;
+      table += `<tr class="${r.rowClass}">
+        <td>${r.month}</td>
+        <td>${fmtMo(r.income)}</td>
+        <td>${fmtMo(r.expenses)}</td>
+        <td>${r.net < 0 ? '<span style="color:var(--red)">' + fmt(r.net) + '</span>' : fmt(r.net)}</td>
+        <td>${r.total < 0 ? '<span style="color:var(--red);font-weight:700">' + fmt(r.total) + '</span>' : fmt(r.total)}</td>
+        <td>${r.cushion < 0 ? '<span style="color:var(--red);font-weight:700">⚠️ ' + fmt(r.cushion) + '</span>' : '✅ +' + fmt(r.cushion)}</td>
+      </tr>`;
+    });
+
+    // Total after wedding
+    const savingsAfter = startSavings + (monthlySave * weddingMonth) - totalOneTime;
+    const cushionAfter = savingsAfter - efTarget;
+
+    table += `<tr class="total">
+      <td colspan="3">Savings After Wedding (Month ${weddingMonth})</td>
+      <td>${fmt(monthlySave)}/mo ongoing</td>
+      <td>${fmt(savingsAfter)}</td>
+      <td>${cushionAfter >= 0 ? '✅ +' + fmt(cushionAfter) : '⚠️ −' + fmt(Math.abs(cushionAfter))}</td>
+    </tr></tbody>`;
+
+    document.getElementById('w-table').innerHTML = table;
+    document.getElementById('w-savings-after').textContent = fmt(savingsAfter);
+    document.getElementById('w-savings-after').style.color = savingsAfter < efTarget ? 'var(--red)' : 'var(--green)';
+
+    // Insight
+    const monthsToEFTarget = cushionAfter > 0 ? Math.ceil(efTarget / monthlySave) : null;
+    let insight = '';
+    if (savingsAfter < 0) {
+      insight = `⚠️ <strong>You'd run out of savings.</strong> After the wedding costs of ${fmt(totalOneTime)}, you'd be ${fmt(Math.abs(savingsAfter))} in the red. You need to either save more before the wedding, reduce wedding costs, or delay the wedding date.`;
+    } else if (savingsAfter < efTarget) {
+      insight = `⚠️ <strong>Savings after wedding: ${fmt(savingsAfter)}.</strong> Your emergency fund target is ${fmt(efTarget)}. You'd be ${fmt(efTarget - savingsAfter)} short — about ${monthsToEFTarget} more months of savings to feel fully secure. Consider building up more before buying a house.`;
+    } else {
+      insight = `✅ <strong>Savings after wedding: ${fmt(savingsAfter)}.</strong> That's ${fmt(cushionAfter)} above your emergency fund target of ${fmt(efTarget)}. You'd be in good shape to proceed with a house purchase.`;
+    }
+    insight += ` Your monthly savings rate of ${fmtMo(monthlySave)} gets you to a 6-month emergency fund in about ${Math.ceil(efTarget / monthlySave)} months of disciplined saving.`;
+    document.getElementById('w-insight').innerHTML = insight;
+  }
+
+  // ===== HOUSE CALCULATOR =====
+  let houseScenario = 'buy-now';
+
+  function setHouseScenario(s) {
+    houseScenario = s;
+    document.querySelectorAll('.scen-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    calcHouse();
+  }
+
+  function calcHouse() {
+    const savingsAtPurchase = parseFloat(document.getElementById('h-savings-input').value) || 0;
+    const price = parseFloat(document.getElementById('h-price-input').value) || 300000;
+    const downPct = parseFloat(document.getElementById('h-down-pct').value) / 100;
+    const rate = parseFloat(document.getElementById('h-rate-input').value) / 100;
+    const closingPct = parseFloat(document.getElementById('h-closing-pct').value) / 100;
+    const propTax = parseFloat(document.getElementById('h-tax-input').value) || 0;
+    const rent = parseFloat(document.getElementById('h-rent-input').value) || 1400;
+    const monthlySave = parseFloat(document.getElementById('h-net-save-input').value) || 0;
+    const efTarget = parseFloat(document.getElementById('h-ef-input').value) || 16908;
+
+    const downPayment = price * downPct;
+    const closingCosts = price * closingPct;
+    const loanAmount = price - downPayment;
+    const monthlyPI = loanAmount * (rate/12 * Math.pow(1+rate/12, 360)) / (Math.pow(1+rate/12, 360) - 1);
+    const monthlyPITI = monthlyPI + (propTax / 12) + 100; // + insurance estimate
+    const cashAfterClosing = savingsAtPurchase - downPayment - closingCosts;
+
+    const rentMonths = houseScenario === 'rent-6mo' ? 6 : 12;
+    const rentIncrease = 0.03;
+    let table = `<thead><tr><th>Month</th><th>Scenario</th><th>Housing Cost</th><th>Monthly Savings</th><th>Total Savings</th><th>vs. Emergency Fund</th></tr></thead><tbody>`;
+
+    let rows = [];
+    const totalMonths = Math.max(rentMonths + 3, 18);
+
+    for (let m = 0; m <= totalMonths; m++) {
+      const isRenting = houseScenario !== 'buy-now' && m < rentMonths;
+      const housingCost = isRenting ? rent * Math.pow(1 + rentIncrease, m/12) : monthlyPITI;
+      const netSavingsThisMonth = monthlySave - housingCost;
+      const investedDuringRent = isRenting ? downPayment * Math.pow(1.07, m/12) : 0;
+      const cashAfterClosingAdj = houseScenario !== 'buy-now' && isRenting
+        ? savingsAtPurchase - investedDuringRent
+        : cashAfterClosing;
+
+      const totalSavings = isRenting
+        ? (savingsAtPurchase - investedDuringRent) + (netSavingsThisMonth * m)
+        : cashAfterClosing + (netSavingsThisMonth * m);
+
+      const cushion = totalSavings - efTarget;
+      const monthName = m === 0 ? 'Start' : (m <= rentMonths ? `Mo ${m} (Rent)` : `Mo ${m} (Own)`);
+      const scenarioLabel = isRenting ? '📦 Renting' : '🏠 Buying';
+
+      rows.push({
+        month: monthName,
+        scenario: scenarioLabel,
+        housing: housingCost,
+        net: netSavingsThisMonth,
+        total: totalSavings,
+        cushion: cushion,
+        isRenting: isRenting
+      });
+    }
+
+    // Show key months
+    const showSet = new Set([0, 1, 3, rentMonths - 1, rentMonths, rentMonths + 1, rentMonths + 2, totalMonths]);
+    rows.forEach((r, idx) => {
+      if (!showSet.has(idx)) return;
+      const rowClass = r.cushion < 0 ? 'warning' : (r.cushion > efTarget ? 'healthy' : '');
+      table += `<tr class="${rowClass}">
+        <td>${r.month}</td>
+        <td style="font-weight:700;color:${r.isRenting ? 'var(--gold)' : 'var(--green)'}">${r.scenario}</td>
+        <td>${fmtMo(r.housing)}</td>
+        <td>${r.net < 0 ? '<span style="color:var(--red)">' + fmtMo(r.net) + '</span>' : fmtMo(r.net)}</td>
+        <td>${r.total < 0 ? '<span style="color:var(--red);font-weight:700">' + fmt(r.total) + '</span>' : fmt(r.total)}</td>
+        <td>${r.cushion < 0 ? '<span style="color:var(--red);font-weight:700">⚠️ ' + fmt(r.cushion) + '</span>' : '✅ +' + fmt(r.cushion)}</td>
+      </tr>`;
+    });
+
+    table += '</tbody>';
+    document.getElementById('h-table').innerHTML = table;
+
+    const scenarioLabel = houseScenario === 'buy-now' ? 'Buy Now (Jan 2027)' : houseScenario === 'rent-6mo' ? 'Rent 6 Months, Then Buy' : 'Rent 12 Months, Then Buy';
+    document.getElementById('h-scenario-label').textContent = scenarioLabel;
+
+    const firstBuySavings = rows[rentMonths + 1]?.total || cashAfterClosing;
+    const finalSavings = rows[totalMonths]?.total || cashAfterClosing;
+    const monthlyHousing = houseScenario === 'buy-now' ? monthlyPITI : monthlyPITI;
+    const monthlyAfterHousing = monthlySave - monthlyHousing;
+
+    document.getElementById('h-savings-after-buy').textContent = fmt(firstBuySavings);
+    document.getElementById('h-savings-after-buy').parentElement.querySelector('.num').style.color = firstBuySavings < efTarget ? 'var(--red)' : 'var(--green)';
+    document.getElementById('h-monthly-housing').textContent = fmtMo(monthlyHousing);
+    document.getElementById('h-monthly-savings').textContent = fmtMo(monthlyAfterHousing);
+    document.getElementById('h-cushion').textContent = (firstBuySavings - efTarget >= 0 ? '+' : '') + fmt(firstBuySavings - efTarget);
+
+    // Insight
+    const buyLowPoint = Math.min(...rows.map(r => r.total));
+    const buyLowMonth = rows.findIndex(r => r.total === buyLowPoint);
+    let insight = '';
+    if (buyLowPoint < 0) {
+      insight = `⚠️ <strong>You'd run out of savings</strong> in month ${buyLowMonth} (${fmt(buyLowPoint)}). This scenario doesn't work without more savings first.`;
+    } else if (buyLowPoint < efTarget) {
+      insight = `⚠️ <strong>Lowest point:</strong> ${fmt(buyLowPoint)} in month ${buyLowMonth}. Your emergency fund target is ${fmt(efTarget)} — you'd be ${fmt(efTarget - buyLowPoint)} below it. That's tight but survivable if you have backup.`;
+    } else {
+      insight = `✅ <strong>Lowest point:</strong> ${fmt(buyLowPoint)} in month ${buyLowMonth}. Your savings never drops below your ${fmt(efTarget)} emergency fund target. You'd be comfortable.`;
+    }
+    insight += ` Your monthly housing cost would be ${fmtMo(monthlyHousing)} (PITI). After housing, you'd save ${fmtMo(monthlyAfterHousing)}/month.`;
+    document.getElementById('h-insight').innerHTML = insight;
+  }
+
+  // ===== MONTHLY CASH FLOW =====
+  function calcMonthly() {
+    const income = parseFloat(document.getElementById('m-income').value) || 0;
+    const expenses = parseFloat(document.getElementById('m-expenses').value) || 0;
+    const monthlySave = income - expenses;
+    const months = parseInt(document.getElementById('m-months').value) || 60;
+    const start = parseFloat(document.getElementById('m-start').value) || 0;
+
+    document.getElementById('m-savings-rate-disp').textContent = fmtMo(monthlySave);
+
+    let table = `<thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Net Savings</th><th>Total Savings</th><th>Cushion</th></tr></thead><tbody>`;
+
+    let savings = start;
+    const showSet = new Set([0, 1, 3, 5, 11, 12, 17, 23, 35, 47, 59].filter(v => v < months));
+
+    for (let m = 0; m <= months; m++) {
+      savings += monthlySave;
+      if (!showSet.has(m)) continue;
+
+      const year = Math.floor(m / 12) + 1;
+      const mo = MONTH_NAMES[m % 12];
+      const label = m === 0 ? 'Start' : `${mo} Yr ${year}`;
+
+      table += `<tr>
+        <td>${label}</td>
+        <td>${fmtMo(income)}</td>
+        <td>${fmtMo(expenses)}</td>
+        <td>${fmtMo(monthlySave)}</td>
+        <td style="font-weight:700">${fmt(savings)}</td>
+        <td>${fmt(savings)}</td>
+      </tr>`;
+    }
+
+    // Annual summaries
+    table += `<tr class="section-head"><td colspan="6">Annual Summaries</td></tr>`;
+    const annuals = [1, 3, 5];
+    annuals.forEach(yr => {
+      if (yr * 12 > months) return;
+      const savingsAtYr = start + monthlySave * yr * 12;
+      table += `<tr>
+        <td>End of Year ${yr}</td><td></td><td></td><td></td>
+        <td style="font-weight:800">${fmt(savingsAtYr)}</td>
+        <td>${fmt(savingsAtYr)}</td>
+      </tr>`;
+    });
+
+    table += '</tbody>';
+    document.getElementById('m-table').innerHTML = table;
+
+    document.getElementById('m-savings-1yr').textContent = fmt(start + monthlySave * 12);
+    document.getElementById('m-savings-3yr').textContent = fmt(start + monthlySave * 36);
+    document.getElementById('m-savings-5yr').textContent = fmt(start + monthlySave * 60);
+  }
+
+  // ===== RETIREMENT CALCULATOR =====
+  function calcRetirement() {
+    const brettSalary = parseFloat(document.getElementById('r-brett-salary').value) || 90500;
+    const abbieSalary = parseFloat(document.getElementById('r-abbie-salary').value) || 40000;
+    const savingsRate = parseFloat(document.getElementById('r-savings-rate').value) / 100;
+    const match = parseFloat(document.getElementById('r-match').value) / 100;
+    const mktReturn = parseFloat(document.getElementById('r-return').value) / 100;
+    const current = parseFloat(document.getElementById('r-current').value) || 0;
+
+    // Simplified: assume gross income = 2.5x net (rough for Brett/Abbie)
+    const brettGross = brettSalary;
+    const abbieGross = abbieSalary * 2.0; // abbie net is ~40K, gross ~80K
+    const combinedGross = brettGross + abbieGross;
+    const combinedNet = combinedGross * 0.65;
+    const monthlyContrib = combinedNet * savingsRate;
+    const annualContrib = monthlyContrib * 12;
+    const employerMatchAmt = brettGross * match;
+
+    let table = `<thead><tr><th>Year</th><th>Brett Age</th><th>Annual Income</th><th>Annual Savings</th><th>Portfolio Start</th><th>Growth</th><th>Portfolio End</th></tr></thead><tbody>`;
+
+    let portfolio = current;
+    const startAge = 24;
+    const showYears = [1, 2, 3, 4, 5, 10, 15, 20, 25, 30, 35, 40];
+    const rows = [];
+
+    for (let yr = 1; yr <= 41; yr++) {
+      const age = startAge + yr;
+      const growStart = portfolio * mktReturn;
+      const contrib = (age <= 50 ? annualContrib : annualContrib * 0.5); // reduce after 55
+      portfolio = portfolio + growStart + contrib + (age <= 50 ? employerMatchAmt : 0);
+
+      if (showYears.includes(yr)) {
+        rows.push({
+          yr, age,
+          income: combinedGross,
+          contrib: contrib + (age <= 50 ? employerMatchAmt : 0),
+          start: portfolio - growStart - contrib - (age <= 50 ? employerMatchAmt : 0),
+          growth: growStart,
+          end: portfolio
+        });
+      }
+    }
+
+    rows.forEach(r => {
+      const is55 = r.age === 55;
+      const is60 = r.age === 60;
+      const is65 = r.age === 65;
+      const rowClass = is55 || is60 || is65 ? 'total' : '';
+      table += `<tr class="${rowClass}">
+        <td>Year ${r.yr}${is55 ? ' 📍' : ''}${is60 ? ' 📍' : ''}${is65 ? ' 📍' : ''}</td>
+        <td>Age ${r.age}</td>
+        <td>${fmt(r.income)}</td>
+        <td>${fmt(r.contrib)}</td>
+        <td>${fmt(r.start)}</td>
+        <td>+${fmt(r.growth)}</td>
+        <td style="font-weight:700">${fmt(r.end)}</td>
+      </tr>`;
+    });
+
+    table += '</tbody>';
+    document.getElementById('r-table').innerHTML = table;
+
+    const finalPortfolio = portfolio;
+    const at65 = rows.find(r => r.age === 65)?.end || finalPortfolio;
+    const at60 = rows.find(r => r.age === 60)?.end || 0;
+    const at55 = rows.find(r => r.age === 55)?.end || 0;
+    const monthlyIncome = at65 * 0.04 / 12;
+
+    document.getElementById('r-at-65').textContent = fmt(at65);
+    document.getElementById('r-at-60').textContent = fmt(at60);
+    document.getElementById('r-at-55').textContent = fmt(at55);
+    document.getElementById('r-monthly-income').textContent = fmtMo(monthlyIncome);
+
+    let insight = `At age 65, your portfolio would be <strong>${fmt(at65)}</strong>. `;
+    insight += `Using the 4% safe withdrawal rule, that's <strong>${fmtMo(monthlyIncome)}</strong> per month in sustainable retirement income. `;
+    if (monthlyIncome > 10000) {
+      insight += `That's a strong retirement — well above typical spending needs. Keep up the savings rate!`;
+    } else {
+      insight += `You may want to increase your savings rate or delay retirement to build more cushion.`;
+    }
+    document.getElementById('r-insight').innerHTML = insight;
+  }
+
+  // Init
+  calcWedding();
+  calcHouse();
+  calcMonthly();
+  calcRetirement();
+</script>
+
+</body>
+</html>

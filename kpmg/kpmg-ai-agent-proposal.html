@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KPMG AI Agent Pilot — Use Cases & Proposal</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 16px;
+      margin-top: 32px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #1a1a2e;
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .use-case {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .use-case p {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 10px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .badge-primary { background: #1a1a2e; color: #fff; }
+    .badge-secondary { background: #e8e8f0; color: #555; }
+    .pilot {
+      background: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .pilot ul {
+      margin-left: 20px;
+      font-size: 13px;
+      color: #444;
+    }
+    .pilot ul li { margin-bottom: 6px; }
+    .my-role {
+      background: #1a1a2e;
+      color: #fff;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .my-role h2 { color: #fff; border-bottom-color: #555; margin-top: 0; }
+    .my-role p { font-size: 13px; color: #ccc; }
+    .appendix {
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .appendix ul {
+      margin-left: 20px;
+      font-size: 12px;
+      color: #666;
+    }
+    .appendix ul li { margin-bottom: 4px; }
+    .footer {
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      margin-top: 32px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <h1>AI Agents in Financial Crimes — Proposal</h1>
+    <p class="subtitle">Autonomous Agent Pilot | Internal Use Case Development | Brett DeGrado</p>
+
+    <!-- Headliner Use Cases -->
+    <h2>Priority Use Cases</h2>
+
+    <div class="use-case">
+      <span class="badge badge-primary">Primary</span>
+      <h3>1. Dynamic Risk & Policy Alignment Agent</h3>
+      <p><strong>The problem:</strong> Every year, banks undergo regulatory risk assessments. Each department then writes policies against that assessment — but nobody has visibility across all departments to ensure alignment. Policies get siloed. Risk assessments and actual policy language drift apart without anyone catching it.</p>
+      <p><strong>What the agent does:</strong> Reads and monitors all policies, procedures, and standards across every department. Continuously compares them against the current risk assessment and flags where alignment breaks down — before regulators do.</p>
+      <p><strong>Why only an agent can do this:</strong> No single human reviews all policies across all departments. The volume and cross-departmental nature of this task makes it impossible to do manually and error-prone if done sporadically.</p>
+    </div>
+
+    <div class="use-case">
+      <span class="badge badge-primary">Primary</span>
+      <h3>2. Autonomous Internal Controls Tester</h3>
+      <p><strong>The problem:</strong> Controls are tested on a predictable schedule. Teams know when testing is coming — they prepare, tighten things up, and get a false picture of compliance. The current approach tests compliance, not actual control effectiveness.</p>
+      <p><strong>What the agent does:</strong> Runs concealed, randomized tests throughout the year (e.g., three times, unannounced). Tests blindly — no prep, no warning. Evaluates whether controls actually work, then delivers a detailed report: what failed, why, and how to improve it.</p>
+      <p><strong>Why this is better than the current process:</strong> A third-party, unbiased, always-on tester that produces genuinely corrective insight — not just a compliance checkbox.</p>
+    </div>
+
+    <!-- Pilot Structure -->
+    <h2>What a Pilot Would Look Like</h2>
+    <div class="pilot">
+      <p>A pilot keeps scope tight and proves the concept before firm-wide commitment:</p>
+      <ul>
+        <li><strong>Scope:</strong> One client scenario or one internal workflow — specifically either the Alert Triage use case (below) or a single policy review cycle using the Risk & Policy Alignment agent</li>
+        <li><strong>How it runs:</strong> Agent works in parallel with current process. Compare outputs side-by-side. Measure accuracy, time savings, and analyst experience.</li>
+        <li><strong>What you need:</strong> Access to one live or historical data set, and a security review of the tool before it touches client data</li>
+        <li><strong>What you get:</strong> A proof-of-concept — does it work, does it save time, is the output usable? — that you can present back to leadership with real numbers</li>
+        <li><strong>Timeline:</strong> Depends on KPMG's internal security review process — typically 2–8 weeks for approval, 4–6 weeks to run the pilot itself</li>
+      </ul>
+    </div>
+
+    <!-- Additional Use Cases -->
+    <h2>Additional Use Cases (Proof of Breadth)</h2>
+    <div class="appendix">
+      <ul>
+        <li><strong>Alert Triage & Prioritization:</strong> Reviews the full case queue and ranks cases by risk level — analysts start with the highest-risk cases first, rather than working FIFO</li>
+        <li><strong>SAR Narrative Generation:</strong> Pulls structured data and generates a first-draft narrative for SAR filings — analyst reviews and refines, doesn't start from scratch</li>
+        <li><strong>Adverse Media Screening:</strong> Monitors and synthesizes news and public records across clients on a continuous basis, flagging material changes</li>
+        <li><strong>Digital Investigator / Level 1 Reviewer:</strong> Automates initial transaction review and alert investigation for low-risk cases, escalating only what requires human judgment</li>
+        <li><strong>Perpetual KYC Agent:</strong> Continuously monitors client profiles and refreshes KYC data outside of periodic review cycles</li>
+        <li><strong>UBO Unraveling Agent:</strong> Traces complex ownership structures to identify ultimate beneficial owners — especially valuable for shell company detection</li>
+        <li><strong>Sanctions Alert Resolution:</strong> Provides contextual analysis of sanctions hits to accelerate and improve analyst decision-making</li>
+        <li><strong>Internal Fraud Simulation:</strong> Models potential fraud scenarios against internal controls to identify vulnerabilities proactively</li>
+      </ul>
+    </div>
+
+    <!-- Brett's Role -->
+    <div class="my-role">
+      <h2>My Role in This</h2>
+      <p>I'm not positioned as the technical builder — I don't have the IT or coding background to architect and deploy a production AI system at KPMG. What I can do is: (1) identify the right use cases, (2) define what the agent needs to accomplish, (3) structure the pilot to produce meaningful results, and (4) translate between what the business needs and what the technical team can build. I see my role as the doer — someone who can own putting this together and making it real, with IT and security handling the implementation layer.</p>
+    </div>
+
+    <!-- Honest Caveats -->
+    <h2>Honest Caveats</h2>
+    <div class="pilot">
+      <ul>
+        <li><strong>Security review is required</strong> before any agent touches live client data — this is non-negotiable and will take time</li>
+        <li><strong>The technical build is IT's lane</strong> — my value is in defining requirements, scoping the pilot, and demonstrating business value</li>
+        <li><strong>We're not starting from scratch</strong> — KPMG has internal databases and security infrastructure that makes this feasible; we're not proposing a consumer tool, we're proposing an internal capability</li>
+        <li><strong>Time to value:</strong> A realistic pilot-to-production timeline is 3–6 months depending on security approval and IT bandwidth</li>
+      </ul>
+    </div>
+
+    <p class="footer">Prepared by Brett DeGrado — Financial Crimes Practice</p>
+
+  </div>
+</body>
+</html>

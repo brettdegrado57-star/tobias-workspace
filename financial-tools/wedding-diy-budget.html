@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wedding DIY Budget — Brett &amp; [Partner] | Feb–April 2027</title>
+  <style>
+    :root {
+      --primary: #7c6aad;
+      --primary-light: #ede9f6;
+      --secondary: #f8f4ff;
+      --accent: #c8a2c8;
+      --text: #2d2d2d;
+      --text-light: #666;
+      --border: #d4c8e8;
+      --success: #5a9e6f;
+      --warning: #d4a017;
+      --white: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background: var(--secondary);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: var(--white);
+      padding: 28px 24px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .overall-summary {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      border: 2px solid var(--border);
+      box-shadow: 0 2px 8px rgba(124,106,173,0.08);
+    }
+
+    .overall-summary h2 {
+      font-size: 1.15rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .summary-pill {
+      background: var(--primary-light);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: center;
+    }
+
+    .summary-pill .label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-pill .value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .summary-pill.total .value { color: var(--success); }
+    .summary-pill.paid .value { color: var(--warning); }
+    .summary-pill.remaining .value { color: var(--primary); }
+
+    .category {
+      background: var(--white);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      border: 2px solid var(--border);
+      box-shadow: 0 2px 8px rgba(124,106,173,0.08);
+      overflow: hidden;
+    }
+
+    .category-header {
+      background: var(--primary-light);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .category-header h3 {
+      font-size: 1.05rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-total {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--white);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    thead tr {
+      background: #faf8ff;
+    }
+
+    th {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-light);
+      border-bottom: 2px solid var(--border);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #f0ebf7;
+      vertical-align: middle;
+    }
+
+    tbody tr:hover { background: #faf8ff; }
+
+    .item-name {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .description {
+      font-size: 0.82rem;
+      color: var(--text-light);
+      max-width: 220px;
+    }
+
+    .cost, .total-col {
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .total-col { font-weight: 600; }
+
+    .done-col {
+      text-align: center;
+      width: 50px;
+    }
+
+    .checkbox {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: var(--primary);
+    }
+
+    .notes {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      max-width: 160px;
+    }
+
+    tr.subtotal-row td {
+      background: var(--primary-light);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--primary);
+      border-bottom: none;
+      padding: 10px 12px;
+    }
+
+    tr.subtotal-row td.total-col { color: var(--success); }
+
+    .add-row td {
+      padding: 6px 12px;
+      background: #faf8ff;
+    }
+
+    .add-row button {
+      background: none;
+      border: 1px dashed var(--border);
+      color: var(--text-light);
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+
+    .add-row button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--white);
+    }
+
+    .overall-footer {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 24px;
+      margin-top: 8px;
+      border: 2px solid var(--border);
+      box-shadow: 0 2px 8px rgba(124,106,173,0.08);
+    }
+
+    .overall-footer h2 {
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+    }
+
+    .footer-pill {
+      background: var(--primary-light);
+      border-radius: 10px;
+      padding: 10px 14px;
+      text-align: center;
+    }
+
+    .footer-pill .label {
+      font-size: 0.75rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-pill .value {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .footer-pill.total .value { color: var(--success); }
+
+    .venue-note {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: #f0fff4;
+      border-radius: 10px;
+      border: 1px solid #c3e6cb;
+    }
+
+    .venue-note strong {
+      color: var(--success);
+      font-size: 0.85rem;
+    }
+
+    .venue-note p {
+      font-size: 0.82rem;
+      color: #2d6a3f;
+      margin-top: 4px;
+    }
+
+    .last-updated {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 0.75rem;
+      margin-top: 20px;
+      padding-bottom: 8px;
+    }
+
+    /* Print styles */
+    @media print {
+      body { background: white; padding: 0; }
+      .container { max-width: 100%; }
+      .category { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; margin-bottom: 16px; }
+      .add-row { display: none; }
+      header { background: var(--primary) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .category-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      thead tr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      tr.subtotal-row td { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .overall-summary, .overall-footer { border: 1px solid #ccc; box-shadow: none; }
+      .venue-note { break-inside: avoid; }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      header h1 { font-size: 1.3rem; }
+      .summary-grid, .footer-grid { grid-template-columns: 1fr 1fr; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 7px 8px; }
+      .description, .notes { display: none; }
+      th { font-size: 0.68rem; }
+      .category-header { padding: 12px 14px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>💒 Wedding DIY Budget</h1>
+    <p>Brett &amp; [Partner] — Eden, St. Charles | Feb–April 2027</p>
+  </header>
+
+  <!-- Overall Budget Summary -->
+  <div class="overall-summary">
+    <h2>📊 Overall DIY Budget Tracker</h2>
+    <div class="summary-grid">
+      <div class="summary-pill">
+        <div class="label">DIY Budget Low</div>
+        <div class="value">$505</div>
+      </div>
+      <div class="summary-pill">
+        <div class="label">DIY Budget High</div>
+        <div class="value">$1,225</div>
+      </div>
+      <div class="summary-pill total">
+        <div class="label">Total Spent</div>
+        <div class="value" id="grandTotal">$0</div>
+      </div>
+      <div class="summary-pill paid">
+        <div class="label">Paid / Done</div>
+        <div class="value" id="grandPaid">$0</div>
+      </div>
+      <div class="summary-pill remaining">
+        <div class="label">Remaining</div>
+        <div class="value" id="grandRemaining">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. DECORATIONS -->
+  <div class="category" id="cat-decorations">
+    <div class="category-header">
+      <h3>🎀 DIY Decorations</h3>
+      <span class="category-total" id="total-decorations">$0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align:right">Est. Cost/Unit</th>
+          <th style="text-align:right">Est. Total</th>
+          <th class="done-col">✓</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cost="35" data-paid="0">
+          <td class="item-name">Mason Jars + Burlap Ribbon</td>
+          <td class="description">~$1–2/jar at Dollar Tree. Drape burlap around jar neck. x20</td>
+          <td class="cost">$1–2 each</td>
+          <td class="total-col">$30–40</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Dollar Tree has best prices</td>
+        </tr>
+        <tr data-cost="20" data-paid="0">
+          <td class="item-name">Wooden Crate Accents</td>
+          <td class="description">Stack vintage crates as pedestals for candles or drinks</td>
+          <td class="cost">$5–15 each</td>
+          <td class="total-col">$15–25</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Check Facebook Marketplace</td>
+        </tr>
+        <tr data-cost="17" data-paid="0">
+          <td class="item-name">Burlap Table Runners</td>
+          <td class="description">Buy by the roll on Amazon — 10-pack</td>
+          <td class="cost">~$10–20</td>
+          <td class="total-col">$15–20</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Amazon has best bulk deals</td>
+        </tr>
+        <tr data-cost="20" data-paid="0">
+          <td class="item-name">Fairy Lights (Extra)</td>
+          <td class="description">Extra fairy lights beyond what Eden provides</td>
+          <td class="cost">~$20</td>
+          <td class="total-col">$20</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Amazon bulk string lights</td>
+        </tr>
+        <tr data-cost="32" data-paid="0">
+          <td class="item-name">Faux Greenery Garlands</td>
+          <td class="description">Lay on tables instead of flowers. ~$3/strand at JoAnn Fabrics</td>
+          <td class="cost">$25–40</td>
+          <td class="total-col">$25–40</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">JoAnn 50% off sales</td>
+        </tr>
+        <tr data-cost="25" data-paid="0">
+          <td class="item-name">DIY Photo Booth</td>
+          <td class="description">Frame arch with eucalyptus/faux greenery + hashtag sign</td>
+          <td class="cost">$20–30</td>
+          <td class="total-col">$20–30</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Michael's 50% off sales</td>
+        </tr>
+        <tr data-cost="15" data-paid="0">
+          <td class="item-name">Hula Hoop Chandelier</td>
+          <td class="description">Hot glue fairy lights to a hula hoop, hang from ceiling</td>
+          <td class="cost">~$15</td>
+          <td class="total-col">$15</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Pinterest tutorial</td>
+        </tr>
+        <tr data-cost="10" data-paid="0">
+          <td class="item-name">Hay Bales (Optional)</td>
+          <td class="description">For outdoor/patio ceremony seating. ~$5–8 each</td>
+          <td class="cost">$5–10</td>
+          <td class="total-col">$10</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Local farm store</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="3">Category Subtotal</td>
+          <td class="total-col" id="subtotal-decorations">$125–175</td>
+          <td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. FAVORS -->
+  <div class="category" id="cat-favors">
+    <div class="category-header">
+      <h3>🎁 Wedding Favors</h3>
+      <span class="category-total" id="total-favors">$0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align:right">Est. Cost/Unit</th>
+          <th style="text-align:right">Est. Total (100 guests)</th>
+          <th class="done-col">✓</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cost="50" data-paid="0">
+          <td class="item-name">Seed Packets 🌻</td>
+          <td class="description">"Watch Love Grow." ~$0.30–0.75 each bulk at Etsy</td>
+          <td class="cost">$0.30–0.75 ea</td>
+          <td class="total-col">$30–75</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Custom labels on Etsy</td>
+        </tr>
+        <tr data-cost="125" data-paid="0">
+          <td class="item-name">Mini Honey Jars 🍯</td>
+          <td class="description">"Meant to Bee" tags. Michaels jars + local honey fill</td>
+          <td class="cost">$1–1.50 ea</td>
+          <td class="total-col">$100–150</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Buy jars at Michaels, honey bulk</td>
+        </tr>
+        <tr data-cost="100" data-paid="0">
+          <td class="item-name">S'mores Kits</td>
+          <td class="description">Graham + chocolate + marshmallow in cellophane bag</td>
+          <td class="cost">$0.75–1 ea</td>
+          <td class="total-col">$75–100</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Guests love these!</td>
+        </tr>
+        <tr data-cost="75" data-paid="0">
+          <td class="item-name">Washi Tape Tea Lights</td>
+          <td class="description">Wrap tea lights in washi tape, tie with twine</td>
+          <td class="cost">$0.50–1 ea</td>
+          <td class="total-col">$50–100</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Dollar Tree tea lights</td>
+        </tr>
+        <tr data-cost="75" data-paid="0">
+          <td class="item-name">Popcorn Bags 🍿</td>
+          <td class="description">"Thanks for Popping By!" Kraft bag + bulk popcorn</td>
+          <td class="cost">$0.50–1 ea</td>
+          <td class="total-col">$50–100</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Costco bulk popcorn</td>
+        </tr>
+        <tr data-cost="75" data-paid="0">
+          <td class="item-name">Custom Matchbooks</td>
+          <td class="description">"The Perfect Match." Custom on Etsy with names/date</td>
+          <td class="cost">$0.50–1 ea</td>
+          <td class="total-col">$50–100</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Etsy custom print shops</td>
+        </tr>
+        <tr data-cost="50" data-paid="0">
+          <td class="item-name">Mini Candles (Tea Lights)</td>
+          <td class="description">Bulk tea lights + custom label: "You Light Up Our Lives"</td>
+          <td class="cost">~$0.50 ea</td>
+          <td class="total-col">$50</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">50 for $5 at Amazon</td>
+        </tr>
+        <tr data-cost="100" data-paid="0">
+          <td class="item-name">Donut Holes (Alt: Skip Favors)</td>
+          <td class="description">Skip favors → serve donuts as dessert/snack at Costco</td>
+          <td class="cost">$0.50–1/person</td>
+          <td class="total-col">$50–100</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">OR skip favors entirely</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="3">Category Subtotal</td>
+          <td class="total-col" id="subtotal-favors">$100–300</td>
+          <td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. WELCOME SIGNS -->
+  <div class="category" id="cat-welcome">
+    <div class="category-header">
+      <h3>🪧 Welcome Signs</h3>
+      <span class="category-total" id="total-welcome">$0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align:right">Est. Cost/Unit</th>
+          <th style="text-align:right">Est. Total</th>
+          <th class="done-col">✓</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cost="80" data-paid="0">
+          <td class="item-name">DIY Foam Board (2–3 Signs)</td>
+          <td class="description">1.5" foam board + spackle + paint + vinyl lettering (Etsy)</td>
+          <td class="cost">~$80 total</td>
+          <td class="total-col">$50–80</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">OhMeOhMy blog tutorial</td>
+        </tr>
+        <tr data-cost="10" data-paid="0">
+          <td class="item-name">Pallet Wood Signs (Free)</td>
+          <td class="description">Break down pallets + sand/stain + hand-letter with Sharpie</td>
+          <td class="cost">~$10</td>
+          <td class="total-col">$0–10</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">ArtsyPrettyPlants.com free templates</td>
+        </tr>
+        <tr data-cost="35" data-paid="0">
+          <td class="item-name">Wooden Round + Vinyl (Michaels)</td>
+          <td class="description">Unfinished wooden round + custom vinyl lettering from Etsy</td>
+          <td class="cost">$25–40 + $15–30</td>
+          <td class="total-col">$40–70</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Michaels/JoAnn 40–60% off</td>
+        </tr>
+        <tr data-cost="45" data-paid="0">
+          <td class="item-name">A-Frame Welcome Board (Amazon)</td>
+          <td class="description">A-frame board with legs + custom vinyl or hand-painted</td>
+          <td class="cost">$30–60</td>
+          <td class="total-col">$30–60</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Amazon has many styles</td>
+        </tr>
+        <tr data-cost="140" data-paid="0">
+          <td class="item-name">Fully Custom Welcome Sign (Etsy)</td>
+          <td class="description">Full custom — most expensive option</td>
+          <td class="cost">$80–200</td>
+          <td class="total-col">$80–200</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Etsy custom shops</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="3">Category Subtotal</td>
+          <td class="total-col" id="subtotal-welcome">$50–80</td>
+          <td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. TABLE CENTERPIECES -->
+  <div class="category" id="cat-centerpieces">
+    <div class="category-header">
+      <h3>🕯️ Table Centerpieces</h3>
+      <span class="category-total" id="total-centerpieces">$0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align:right">Est. Cost/Unit</th>
+          <th style="text-align:right">Est. Total (10 tables)</th>
+          <th class="done-col">✓</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cost="65" data-paid="0">
+          <td class="item-name">Pillar Candles + Votives</td>
+          <td class="description">Cluster different heights. Dollar Tree pillars + Eden votives</td>
+          <td class="cost">$5–8/table</td>
+          <td class="total-col">$50–80</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Eden provides gold votives + battery candles</td>
+        </tr>
+        <tr data-cost="50" data-paid="0">
+          <td class="item-name">Floating Candle Cylinders</td>
+          <td class="description">Clear cylinders + floating candles + river stones</td>
+          <td class="cost">$5/table</td>
+          <td class="total-col">$50</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Dollar Tree cylinders</td>
+        </tr>
+        <tr data-cost="30" data-paid="0">
+          <td class="item-name">Wood Slices</td>
+          <td class="description">Buy wood rounds from Etsy or cut from a tree. ~$2–3 each</td>
+          <td class="cost">$3/table</td>
+          <td class="total-col">$30</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Etsy bulk wood rounds</td>
+        </tr>
+        <tr data-cost="50" data-paid="0">
+          <td class="item-name">Faux Garland Strands</td>
+          <td class="description">Drape garland down center of long tables, nestle candles in</td>
+          <td class="cost">$5/table</td>
+          <td class="total-col">$50</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">JoAnn Fabrics faux eucalyptus</td>
+        </tr>
+        <tr data-cost="30" data-paid="0">
+          <td class="item-name">Lanterns (IKEA)</td>
+          <td class="description">Metal lanterns ($6–10 at IKEA) placed on mirrors for reflection</td>
+          <td class="cost">$6–10 each</td>
+          <td class="total-col">$30–50</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">IKEA has great metal lanterns</td>
+        </tr>
+        <tr data-cost="20" data-paid="0">
+          <td class="item-name">Books + Candles</td>
+          <td class="description">Stack old books (thrift stores $1 each), top with candle</td>
+          <td class="cost">~$2/table</td>
+          <td class="total-col">$20</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Thrift stores = $1 books</td>
+        </tr>
+        <tr data-cost="20" data-paid="0">
+          <td class="item-name">Faux Succulents in Pots</td>
+          <td class="description">Reusable, cheap, rustic. JoAnn's mini succulents $1–2 on sale</td>
+          <td class="cost">$1–2 each</td>
+          <td class="total-col">$20</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">JoAnn 50% off sales</td>
+        </tr>
+        <tr data-cost="20" data-paid="0">
+          <td class="item-name">Wine/Beer Bottles + Fairy Lights</td>
+          <td class="description">Collect bottles, paint or leave amber, stuff with fairy lights</td>
+          <td class="cost">$0–2/table</td>
+          <td class="total-col">$0–20</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Save bottles from events!</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="3">Category Subtotal</td>
+          <td class="total-col" id="subtotal-centerpieces">$180–210</td>
+          <td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. DJ / MUSIC -->
+  <div class="category" id="cat-dj">
+    <div class="category-header">
+      <h3>🎵 Spotify DJ Setup</h3>
+      <span class="category-total" id="total-dj">$0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align:right">Est. Cost/Unit</th>
+          <th style="text-align:right">Est. Total</th>
+          <th class="done-col">✓</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cost="11" data-paid="0">
+          <td class="item-name">Spotify Premium Subscription</td>
+          <td class="description">~11/month — needed for offline playlists &amp; no ads</td>
+          <td class="cost">$11/month</td>
+          <td class="total-col">$11</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">1 month subscription</td>
+        </tr>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">Spotify Account Setup (Free)</td>
+          <td class="description">Create playlists: Ceremony, Dinner, Dancing, Last Dance</td>
+          <td class="cost">Free</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Eden has Bluetooth/Spotify system built in!</td>
+        </tr>
+        <tr data-cost="300" data-paid="0">
+          <td class="item-name">Partial DJ (Optional)</td>
+          <td class="description">Hire for ceremony + first dances only. ~$200–400</td>
+          <td class="cost">$200–400</td>
+          <td class="total-col">$0–400</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Spotify for rest of night</td>
+        </tr>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">Beatmatch App (Spotify Beta)</td>
+          <td class="description">AI analyzes tempo/key, suggests transitions. Free beta</td>
+          <td class="cost">Free</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Free beta by Spotify</td>
+        </tr>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">Backup Emergency Playlist</td>
+          <td class="description">Download 50-song offline playlist in case wifi dies</td>
+          <td class="cost">Free</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Premium offline feature</td>
+        </tr>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">Designated "DJ" Friend</td>
+          <td class="description">Friend with phone — skips songs, adjusts volume, reads room</td>
+          <td class="cost">Free</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Give them a playlist + instructions</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="3">Category Subtotal</td>
+          <td class="total-col" id="subtotal-dj">$0–411</td>
+          <td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. GUEST PHOTOS -->
+  <div class="category" id="cat-photos">
+    <div class="category-header">
+      <h3>📸 Guest Photo Strategy</h3>
+      <span class="category-total" id="total-photos">$0</span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Description</th>
+          <th style="text-align:right">Est. Cost/Unit</th>
+          <th style="text-align:right">Est. Total</th>
+          <th class="done-col">✓</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">QR Code Shared Album (Primary)</td>
+          <td class="description">WedPics or Google Photos shared album — guests upload via QR</td>
+          <td class="cost">Free</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Generate QR at qr-code-generator.com</td>
+        </tr>
+        <tr data-cost="20" data-paid="0">
+          <td class="item-name">Disposable Cameras (2–4)</td>
+          <td class="description">Fujifilm Quicksnap on key tables: head table, dance floor, guest book</td>
+          <td class="cost">$7–10 each</td>
+          <td class="total-col">$20</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Amazon Fujifilm Quicksnap</td>
+        </tr>
+        <tr data-cost="31" data-paid="0">
+          <td class="item-name">Polaroid Camera + Film</td>
+          <td class="description">Polaroid guest book — rent camera ~$15 + film ~$16 (10 shots)</td>
+          <td class="cost">~$31</td>
+          <td class="total-col">$31</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Polaroid Originals film</td>
+        </tr>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">Printable QR Sign</td>
+          <td class="description">Print QR code on 4x6 cardstock at home for guest book table</td>
+          <td class="cost">~$0</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Home print or FedEx $2</td>
+        </tr>
+        <tr data-cost="0" data-paid="0">
+          <td class="item-name">MC Announcement Script</td>
+          <td class="description">Write quick script for MC to announce photo sharing at start</td>
+          <td class="cost">Free</td>
+          <td class="total-col">$0</td>
+          <td class="done-col"><input type="checkbox" class="checkbox" onchange="recalc()"></td>
+          <td class="notes">Include in day-of timeline</td>
+        </tr>
+        <tr class="subtotal-row">
+          <td colspan="3">Category Subtotal</td>
+          <td class="total-col" id="subtotal-photos">$50–60</td>
+          <td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Grand Total Footer -->
+  <div class="overall-footer">
+    <h2>💰 Master Budget Summary</h2>
+    <div class="footer-grid">
+      <div class="footer-pill">
+        <div class="label">DIY Decorations</div>
+        <div class="value">$125–175</div>
+      </div>
+      <div class="footer-pill">
+        <div class="label">Wedding Favors</div>
+        <div class="value">$100–300</div>
+      </div>
+      <div class="footer-pill">
+        <div class="label">Welcome Signs</div>
+        <div class="value">$50–80</div>
+      </div>
+      <div class="footer-pill">
+        <div class="label">Table Centerpieces</div>
+        <div class="value">$180–210</div>
+      </div>
+      <div class="footer-pill">
+        <div class="label">Spotify DJ</div>
+        <div class="value">$0–400</div>
+      </div>
+      <div class="footer-pill">
+        <div class="label">Guest Photos</div>
+        <div class="value">$50–60</div>
+      </div>
+      <div class="footer-pill total">
+        <div class="label">TOTAL DIY BUDGET</div>
+        <div class="value">$505–1,225</div>
+      </div>
+    </div>
+
+    <div class="venue-note">
+      <strong>✅ Eden's Included Items (Already Paid!)</strong>
+      <p>Dimmable event lighting, white sheer ceiling &amp; window drapery with fairy lights, gold mercury glass votive holders + battery candles, wooden cross-back chairs &amp; round tables, full Bluetooth/Surround Sound system, DJ/band performance stage, on-site parking — <em>no need to budget for these!</em></p>
+    </div>
+  </div>
+
+  <p class="last-updated">Research compiled for Brett DeGrado's Feb–April 2027 wedding at Eden, St. Charles, IL</p>
+</div>
+
+<script>
+  function recalc() {
+    const cats = [
+      { id: 'decorations', high: 175, low: 125 },
+      { id: 'favors', high: 300, low: 100 },
+      { id: 'welcome', high: 80, low: 50 },
+      { id: 'centerpieces', high: 210, low: 180 },
+      { id: 'dj', high: 411, low: 11 },
+      { id: 'photos', high: 60, low: 50 }
+    ];
+
+    let grandSpent = 0;
+    let grandPaid = 0;
+
+    cats.forEach(cat => {
+      const rows = document.querySelectorAll(`#cat-${cat.id} tbody tr[data-cost]`);
+      let catPaid = 0;
+      rows.forEach(row => {
+        const cb = row.querySelector('.checkbox');
+        if (cb && cb.checked) {
+          catPaid += parseFloat(row.dataset.cost) || 0;
+        }
+      });
+      grandSpent += cat.high;
+      grandPaid += catPaid;
+
+      const pill = document.getElementById(`total-${cat.id}`);
+      if (pill) pill.textContent = `${cat.low}–${cat.high}`;
+    });
+
+    document.getElementById('grandTotal').textContent = `$${grandSpent.toLocaleString()}`;
+    document.getElementById('grandPaid').textContent = `$${grandPaid.toLocaleString()}`;
+    const remaining = grandSpent - grandPaid;
+    document.getElementById('grandRemaining').textContent = `$${remaining.toLocaleString()}`;
+  }
+
+  recalc();
+</script>
+</body>
+</html>

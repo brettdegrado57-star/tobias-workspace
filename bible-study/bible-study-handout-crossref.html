@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-Reference Map — John 6 & Matthew 14</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Georgia, serif;
+      background: #fff;
+      color: #222;
+      font-size: 10.5pt;
+      line-height: 1.6;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 36px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid #1a5c2a;
+    }
+
+    header h1 {
+      font-size: 19pt;
+      color: #1a5c2a;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 9.5pt;
+      color: #666;
+      font-style: italic;
+    }
+
+    h2 {
+      font-size: 12pt;
+      color: #fff;
+      background: #1a5c2a;
+      padding: 7px 14px;
+      border-radius: 6px;
+      margin: 26px 0 12px;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: 10.5pt;
+      color: #1a5c2a;
+      font-weight: 700;
+      margin: 18px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 2px solid #e8f5e9;
+    }
+
+    /* Central Theme Map */
+    .theme-map {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 8px;
+    }
+
+    .theme-row {
+      display: flex;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .theme-label {
+      width: 150px;
+      flex-shrink: 0;
+      background: #e8f5e9;
+      border: 2px solid #a5d6a7;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .theme-label span {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #1a5c2a;
+      line-height: 1.3;
+    }
+
+    .theme-connections {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .ref-card {
+      background: #fafafa;
+      border: 1px solid #e0e0d8;
+      border-left: 4px solid #ddd;
+      border-radius: 6px;
+      padding: 8px 14px;
+      font-size: 10pt;
+    }
+
+    .ref-card.john { border-left-color: #1565c0; }
+    .ref-card.matt { border-left-color: #6a1b9a; }
+    .ref-card.other { border-left-color: #f9a825; }
+
+    .ref-card cite {
+      font-weight: 700;
+      font-style: normal;
+      display: block;
+      font-size: 9pt;
+      margin-bottom: 2px;
+    }
+
+    .ref-card.john cite { color: #1565c0; }
+    .ref-card.matt cite { color: #6a1b9a; }
+    .ref-card.other cite { color: #b8860b; }
+
+    .ref-card p {
+      font-size: 9.5pt;
+      color: #444;
+      margin: 0;
+    }
+
+    /* Scripture Connections Table */
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 9.5pt;
+    }
+
+    .ref-table th {
+      background: #1a5c2a;
+      color: #fff;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ref-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+
+    .ref-table tr:nth-child(even) td { background: #f9f9f7; }
+
+    .ref-table td:first-child {
+      font-weight: 700;
+      color: #1a5c2a;
+      width: 30%;
+    }
+
+    .passage-tag {
+      display: inline-block;
+      font-size: 8pt;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-bottom: 3px;
+    }
+
+    .passage-tag.j { background: #e3f2fd; color: #1565c0; }
+    .passage-tag.m { background: #f3e5f5; color: #6a1b9a; }
+    .passage-tag.o { background: #fff8e1; color: #b8860b; }
+
+    /* Visual Theme Web */
+    .visual-section {
+      margin: 24px 0;
+    }
+
+    .center-theme {
+      background: linear-gradient(135deg, #1a5c2a, #2e7d32);
+      color: white;
+      text-align: center;
+      padding: 16px;
+      border-radius: 50%;
+      width: 160px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      font-size: 13pt;
+      font-weight: 700;
+      line-height: 1.3;
+      box-shadow: 0 4px 20px rgba(26,92,42,0.3);
+    }
+
+    .satellite-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: -30px;
+      padding: 0 20px;
+      gap: 10px;
+    }
+
+    .satellite {
+      flex: 1;
+      background: #e8f5e9;
+      border: 2px solid #a5d6a7;
+      border-radius: 10px;
+      padding: 12px 10px;
+      text-align: center;
+      font-size: 9pt;
+      font-weight: 700;
+      color: #1a5c2a;
+    }
+
+    .satellite span {
+      display: block;
+      font-size: 8pt;
+      font-weight: 400;
+      color: #555;
+      margin-top: 3px;
+    }
+
+    /* Bottom Cross-References */
+    .bottom-refs {
+      background: #f9f9f7;
+      border: 1px solid #e0e0d8;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-top: 20px;
+    }
+
+    .bottom-refs h3 {
+      margin-top: 0;
+    }
+
+    .ref-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .ref-item {
+      background: #fff;
+      border: 1px solid #e0e0d8;
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 9.5pt;
+    }
+
+    .ref-item strong {
+      color: #1a5c2a;
+      font-size: 9pt;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .ref-item p {
+      font-size: 9pt;
+      color: #555;
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid #ddd;
+      font-size: 9pt;
+      color: #888;
+      text-align: center;
+      font-style: italic;
+    }
+
+    @media print {
+      body { padding: 20px; }
+      .satellite-row { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🔗 Cross-Reference Map</h1>
+  <p>John 6:1–15 & Matthew 14:22–33 — How the Themes Connect Across Scripture</p>
+</header>
+
+<!-- CENTRAL THEME -->
+<h2>🌊 The Overarching Theme: Jesus Walks in the Storm</h2>
+
+<div class="visual-section">
+  <div style="text-align:center;">
+    <div class="center-theme">Jesus Sees Our Need<br>& Provides</div>
+  </div>
+  <div class="satellite-row">
+    <div class="satellite">Provision<br><span>When resources seem impossible</span></div>
+    <div class="satellite">Presence<br><span>He meets us in the storm</span></div>
+    <div class="satellite">Faith<br><span>Called to step out, not stand still</span></div>
+    <div class="satellite">Worship<br><span>The right response to revelation</span></div>
+  </div>
+</div>
+
+<!-- THEME MAP -->
+<h2>📚 How the Themes Connect Across Both Passages</h2>
+
+<div class="theme-map">
+
+  <!-- Theme 1 -->
+  <div class="theme-row">
+    <div class="theme-label"><span>👁️ Jesus Sees<br>Before We Ask</span></div>
+    <div class="theme-connections">
+      <div class="ref-card john">
+        <cite>John 6:5–6 — Feeding the 5,000</cite>
+        <p>Jesus sees the crowd and their need. He tests Philip: "Where shall we buy bread?" — but He already knows what He will do. He sees ahead of time.</p>
+      </div>
+      <div class="ref-card matt">
+        <cite>Matthew 14:13, 22 — Sending and Staying</cite>
+        <p>Jesus "saw the crowds" and had compassion. Then He sent the disciples ahead while He dismissed the crowds. He sees both the crowd's need <em>and</em> the disciples' storm.</p>
+      </div>
+      <div class="ref-card other">
+        <cite>Psalm 139:1–4</cite>
+        <p>"You have searched me and known me. You know my sitting down and my rising up..." God sees before we call.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme 2 -->
+  <div class="theme-row">
+    <div class="theme-label"><span>🍞 God's Abundance<br>vs. Human Scarcity</span></div>
+    <div class="theme-connections">
+      <div class="ref-card john">
+        <cite>John 6:7–13 — Five Loaves, Twelve Baskets</cite>
+        <p>200 denarii ($30K) wasn't enough — but a boy's lunch was. Scarcity thinking (Andrew) vs. Jesus who multiplies what seems impossible.</p>
+      </div>
+      <div class="ref-card other">
+        <cite>2 Kings 4:1–7 — Elisha and the Widow's Oil</cite>
+        <p>The widow's oil was "not enough to pay her debts" — but God multiplied it until the jars ran out. Same pattern: scarcity to abundance.</p>
+      </div>
+      <div class="ref-card other">
+        <cite>Ephesians 3:20</cite>
+        <p>"Now to Him who is able to do immeasurably more than all we ask or imagine, according to His power that is at work within us."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme 3 -->
+  <div class="theme-row">
+    <div class="theme-label"><span>🌊 He Walks<br>in the Storm</span></div>
+    <div class="theme-connections">
+      <div class="ref-card john">
+        <cite>John 6:19–21 — Walking on the Sea</cite>
+        <p>The disciples had rowed 3–3.5 miles against a harsh wind. Then they saw Jesus walking on the sea — and immediately, they reached their destination.</p>
+      </div>
+      <div class="ref-card matt">
+        <cite>Matthew 14:24–27 — "Be of Good Cheer"</cite>
+        <p>Jesus walks toward them in the storm — not after it passes, but during it. "Be of good cheer; it is I; be not afraid."</p>
+      </div>
+      <div class="ref-card other">
+        <cite>Isaiah 43:2</cite>
+        <p>"When you pass through the waters, I will be with you; and through the rivers, they shall not overwhelm you."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme 4 -->
+  <div class="theme-row">
+    <div class="theme-label"><span>🦶 Stepping Out<br>in Faith</span></div>
+    <div class="theme-connections">
+      <div class="ref-card matt">
+        <cite>Matthew 14:28–31 — Peter Walks</cite>
+        <p>Peter asked to be called out. Jesus said "Come." Peter got out — and walked. He sank because he took his eyes off Jesus and looked at the waves.</p>
+      </div>
+      <div class="ref-card other">
+        <cite>Joshua 1:9</cite>
+        <p>"Have I not commanded you to be strong and courageous? Do not be frightened, and do not be dismayed, for the LORD your God is with you."</p>
+      </div>
+      <div class="ref-card other">
+        <cite>James 1:6–8</cite>
+        <p>"He who doubts is like a wave of the sea, blown and tossed by the wind. That person should not suppose they will receive anything from the Lord."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Theme 5 -->
+  <div class="theme-row">
+    <div class="theme-label"><span>🙏 Worship<br>After Revelation</span></div>
+    <div class="theme-connections">
+      <div class="ref-card matt">
+        <cite>Matthew 14:32–33 — "Truly, Son of God"</cite>
+        <p>After the storm, after walking on water, after witnessing the miracle — the disciples fell down and worshipped: "Truly, You are the Son of God."</p>
+      </div>
+      <div class="ref-card john">
+        <cite>John 6:14–15 — Wrong Worship</cite>
+        <p>The crowds wanted to make Jesus king by force. Worship motivated by what He could <em>do</em>, not who He is. Jesus withdrew.</p>
+      </div>
+      <div class="ref-card other">
+        <cite>Romans 1:20</cite>
+        <p>"Since the creation of the world, His invisible attributes have been clearly seen..." Creation reveals — we respond in worship.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONNECTING TABLE -->
+<h2>📖 Side-by-Side: What Each Gospel Emphasizes</h2>
+
+<table class="ref-table">
+  <thead>
+    <tr>
+      <th>Event / Theme</th>
+      <th>📘 John's Emphasis (Ch. 6)</th>
+      <th>📗 Matthew's Emphasis (Ch. 14)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Jesus' compassion</td>
+      <td>He tests Philip — He already knows what He'll do. His provision is deliberate.</td>
+      <td>He "saw the crowds and had compassion on them" — then healed their sick.</td>
+    </tr>
+    <tr>
+      <td>The miracle</td>
+      <td>Detailed: 5 loaves, 2 fish, 12 baskets. Everyone ate and was full. More than enough.</td>
+      <td>The miracle is assumed — emphasis is on <em>who</em> Jesus is, not the mechanics.</td>
+    </tr>
+    <tr>
+      <td>Jesus' divinity</td>
+      <td>"I am the Bread of Life" — later in the chapter (v. 35, 48). Connected to feeding.</td>
+      <td>"Truly, You are the Son of God" — disciples' confession after witnessing power.</td>
+    </tr>
+    <tr>
+      <td>Jesus' withdrawal</td>
+      <td>He "withdrew again to the mountain by Himself" — after avoiding being made king.</td>
+      <td>He "went up on the mountain by Himself to pray" — sent disciples ahead into the storm.</td>
+    </tr>
+    <tr>
+      <td>Peter</td>
+      <td>Not mentioned walking on water in John's account.</td>
+      <td>Called out of the boat, walks on water, sinks, is saved — full story.</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- MORE CONNECTIONS -->
+<div class="bottom-refs">
+  <h3>🔗 More Cross-References to Explore</h3>
+  <div class="ref-grid">
+    <div class="ref-item">
+      <strong>Mark 6:45–52</strong>
+      <p>Mark's account of walking on water — includes detail that Jesus "meant to pass by them."</p>
+    </div>
+    <div class="ref-item">
+      <strong>Luke 9:10–17</strong>
+      <p>Luke's feeding account — includes Jesus taking, blessing, breaking, and giving. Same Greek word used of the Last Supper.</p>
+    </div>
+    <div class="ref-item">
+      <strong>John 6:35 — "I Am the Bread of Life"</strong>
+      <p>Later in John 6, Jesus unpacks what the miracle meant: He is the bread that came down from heaven. The crowd ate bread but still didn't understand.</p>
+    </div>
+    <div class="ref-item">
+      <strong>Exodus 16 — Manna in the Wilderness</strong>
+      <p>God provided bread from heaven (manna) in the desert. Jesus reclaims this title — He is the true bread. The feeding miracle echoes and fulfills the exodus pattern.</p>
+    </div>
+    <div class="ref-item">
+      <strong>Matthew 6:25–34 — Do Not Be Anxious</strong>
+      <p>Jesus' teaching on anxiety directly connects: "Your Father in heaven knows that you need them. Seek first the kingdom..." The feeding miracle is a living sermon on this.</p>
+    </div>
+    <div class="ref-item">
+      <strong>Habakkuk 3:19</strong>
+      <p>"God, the Lord, is my strength; He makes my feet like the deer's; He makes me walk on my high places." — walking on water is a picture of walking in trials victoriously.</p>
+    </div>
+  </div>
+</div>
+
+<p class="footer-note">John 6:1–15 & Matthew 14:22–33 | Cross-Reference Map for personal study and group discussion</p>
+
+</body>
+</html>

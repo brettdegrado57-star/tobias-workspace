@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>House Hunter — Find Your Starter Home</title>
+  <style>
+    :root {
+      --green: #1a5c2a;
+      --green-light: #e8f5e9;
+      --blue: #1565c0;
+      --blue-light: #e3f2fd;
+      --gold: #b8860b;
+      --gold-light: #fffde7;
+      --red: #c62828;
+      --red-light: #ffebee;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --border: #ddd;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--green), #2e7d32);
+      color: white;
+      padding: 20px 20px 16px;
+      text-align: center;
+    }
+
+    header h1 { font-size: clamp(1.3rem, 4vw, 1.7rem); font-weight: 700; margin-bottom: 2px; }
+    header p { opacity: 0.85; font-size: 0.82rem; }
+
+    .header-note {
+      background: var(--gold-light);
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin: 12px auto 0;
+      max-width: 600px;
+      font-size: 0.78rem;
+      color: #5d4037;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      background: var(--card);
+      border-bottom: 2px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 14px 10px;
+      border: none;
+      background: transparent;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active { color: var(--green); border-bottom-color: var(--green); }
+    .tab-btn:hover:not(.active) { background: #f9f9f9; }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 16px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Forms */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 8px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      background: white;
+      color: var(--text);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--green); }
+    .form-group input[type="number"] { -moz-appearance: textfield; }
+    .form-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary { background: var(--green); color: white; }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-outline:hover { border-color: var(--green); color: var(--green); }
+    .btn-gold { background: var(--gold); color: white; }
+    .btn-gold:hover { filter: brightness(1.1); }
+
+    .btn-sm { padding: 6px 12px; font-size: 0.78rem; }
+
+    .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+    /* Results */
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .results-header h2 { font-size: 1rem; font-weight: 700; }
+    .results-count { font-size: 0.78rem; color: var(--text-muted); background: var(--green-light); padding: 4px 10px; border-radius: 20px; font-weight: 600; }
+
+    /* Listing Card */
+    .listing-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      border-left: 5px solid var(--green);
+      transition: box-shadow 0.2s;
+    }
+
+    .listing-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+    .listing-card.saved { border-left-color: var(--gold); }
+
+    .listing-header { display: flex; gap: 12px; padding: 14px; align-items: flex-start; }
+
+    .listing-thumb {
+      width: 100px;
+      height: 75px;
+      background: #e8e8e0;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      overflow: hidden;
+    }
+
+    .listing-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .listing-info { flex: 1; min-width: 0; }
+
+    .listing-price { font-size: 1.15rem; font-weight: 800; color: var(--green); }
+
+    .listing-address { font-size: 0.82rem; color: var(--text); margin: 2px 0; }
+    .listing-city { font-size: 0.75rem; color: var(--text-muted); }
+
+    .listing-specs {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .listing-specs span {
+      background: #f0f0f0;
+      padding: 1px 7px;
+      border-radius: 8px;
+    }
+
+    .listing-specs span.garage { background: var(--blue-light); color: var(--blue); }
+    .listing-specs span.price-hint { background: var(--gold-light); color: var(--gold); font-size: 0.68rem; }
+
+    .listing-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-top: 1px solid #f0f0f0;
+      line-height: 1.5;
+    }
+
+    .listing-footer {
+      display: flex;
+      gap: 6px;
+      padding: 8px 14px 14px;
+      flex-wrap: wrap;
+    }
+
+    /* Loading */
+    .loading-state {
+      text-align: center;
+      padding: 48px 20px;
+    }
+
+    .loading-state .spinner {
+      font-size: 2.5rem;
+      animation: pulse 1.2s ease-in-out infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .loading-state h3 { font-size: 1rem; margin-bottom: 6px; color: var(--text); }
+    .loading-state p { font-size: 0.82rem; color: var(--text-muted); }
+
+    /* Empty */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state .emoji { font-size: 2.8rem; margin-bottom: 10px; }
+    .empty-state h3 { font-size: 1rem; margin-bottom: 6px; color: var(--text); }
+    .empty-state p { font-size: 0.82rem; line-height: 1.6; }
+
+    /* Error */
+    .error-state {
+      background: var(--red-light);
+      border: 1px solid #ef9a9a;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 0.82rem;
+      color: var(--red);
+      text-align: center;
+    }
+
+    /* Cost Calculator */
+    .calc-summary {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .calc-summary-item {
+      background: var(--green-light);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .calc-summary-item.gold { background: var(--gold-light); }
+    .calc-summary-item.blue { background: var(--blue-light); }
+    .calc-summary-item.red { background: var(--red-light); }
+
+    .calc-summary-num { font-size: 1.3rem; font-weight: 800; }
+    .calc-summary-item .calc-summary-num { color: var(--green); }
+    .calc-summary-item.gold .calc-summary-num { color: var(--gold); }
+    .calc-summary-item.blue .calc-summary-num { color: var(--blue); }
+    .calc-summary-item.red .calc-summary-num { color: var(--red); }
+
+    .calc-summary-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    .breakdown-table th {
+      text-align: left;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 8px 0;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .breakdown-table td {
+      padding: 8px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .breakdown-table td:last-child { text-align: right; font-weight: 600; }
+
+    .breakdown-table tr.total td {
+      font-weight: 800;
+      font-size: 0.95rem;
+      border-top: 2px solid var(--border);
+      border-bottom: none;
+      padding-top: 12px;
+    }
+
+    .breakdown-table tr.total td:last-child { color: var(--green); }
+
+    .rate-scenario {
+      background: #f8f9fa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .rate-scenario-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .rate-scenario-header strong { font-size: 0.85rem; }
+
+    .rate-badge {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    .rate-badge.green { background: var(--green-light); color: var(--green); }
+    .rate-badge.yellow { background: #fff8e1; color: #f57f17; }
+    .rate-badge.red { background: var(--red-light); color: var(--red); }
+
+    .rate-details { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; }
+    .rate-details span { color: var(--text); font-weight: 600; }
+
+    .section-divider { height: 1px; background: var(--border); margin: 16px 0; }
+
+    .disclaimer {
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.75rem;
+      color: #5d4037;
+      line-height: 1.6;
+      margin-top: 16px;
+    }
+
+    /* Saved Tab */
+    .saved-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .saved-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 14px;
+      border-left: 5px solid var(--gold);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .saved-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+    .saved-price { font-size: 1.1rem; font-weight: 800; color: var(--green); }
+    .saved-address { font-size: 0.82rem; color: var(--text); }
+    .saved-specs { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+    .saved-notes { font-size: 0.78rem; color: var(--text-muted); background: #f9f9f7; border-radius: 6px; padding: 6px 8px; margin-top: 6px; font-style: italic; }
+    .saved-card-footer { display: flex; gap: 6px; margin-top: 8px; }
+
+    footer { text-align: center; padding: 24px 16px; font-size: 0.72rem; color: var(--text-muted); }
+
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .calc-summary { grid-template-columns: 1fr 1fr; }
+      .listing-header { flex-direction: column; }
+      .listing-thumb { width: 100%; height: 140px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏠 House Hunter</h1>
+  <p>Your starter home research tool — find, save, and plan</p>
+  <div class="header-note">
+    💡 Listings are pulled live from Zillow. Prices and availability change — verify with a licensed agent before making decisions.
+  </div>
+</header>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('finder')">🔍 Find Houses</button>
+  <button class="tab-btn" onclick="switchTab('calculator')">🧮 Cost Calculator</button>
+  <button class="tab-btn" onclick="switchTab('saved')">❤️ Saved (<span id="saved-count">0</span>)</button>
+</div>
+
+<div class="container">
+
+  <!-- ========== TAB 1: FINDER ========== -->
+  <div class="tab-content active" id="tab-finder">
+
+    <div class="card">
+      <div class="card-title">🎯 Your Search Criteria</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Max Price</label>
+          <select id="max-price">
+            <option value="200000">Up to $200,000</option>
+            <option value="250000">Up to $250,000</option>
+            <option value="300000">Up to $300,000</option>
+            <option value="350000" selected>Up to $350,000</option>
+            <option value="400000">Up to $400,000</option>
+            <option value="450000">Up to $450,000</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Min Beds</label>
+          <select id="min-beds">
+            <option value="2" selected>2+ beds</option>
+            <option value="3">3+ beds</option>
+            <option value="4">4+ beds</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Min Baths</label>
+          <select id="min-baths">
+            <option value="1">1+ baths</option>
+            <option value="1.5" selected>1.5+ baths</option>
+            <option value="2">2+ baths</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Radius from Bloomingdale</label>
+          <select id="radius">
+            <option value="10">Within 10 miles</option>
+            <option value="15">Within 15 miles</option>
+            <option value="20" selected>Within 20 miles</option>
+            <option value="25">Within 25 miles</option>
+            <option value="30">Within 30 miles</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Property Type</label>
+          <select id="property-type">
+            <option value="house">House only</option>
+            <option value="townhouse">Townhouse only</option>
+            <option value="both" selected>House or Townhouse</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Garage</label>
+          <select id="garage">
+            <option value="required" selected>Garage required</option>
+            <option value="any">Any</option>
+          </select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="search-btn" onclick="searchHouses()">🔍 Find Houses Near Me</button>
+        <button class="btn btn-outline" onclick="openInBrowser()">🌐 Open in Browser</button>
+      </div>
+    </div>
+
+    <div id="results-area">
+      <div class="empty-state">
+        <div class="emoji">🏡</div>
+        <h3>Ready to find your home?</h3>
+        <p>Set your criteria above and hit <strong>Find Houses Near Me</strong>. I'll pull live listings from Zillow and display them here — no browser needed.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== TAB 2: CALCULATOR ========== -->
+  <div class="tab-content" id="tab-calculator">
+
+    <div class="card">
+      <div class="card-title">💰 Purchase Details</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Home Price</label>
+          <input type="number" id="home-price" value="350000" min="50000" step="5000" oninput="updateCalculator()">
+        </div>
+        <div class="form-group">
+          <label>Down Payment</label>
+          <select id="down-payment-pct" onchange="updateCalculator()">
+            <option value="3">3% ( FHA )</option>
+            <option value="5">5% ( Conventional )</option>
+            <option value="10">10%</option>
+            <option value="20" selected>20% ( avoids PMI )</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Est. Property Tax / year</label>
+          <input type="number" id="prop-tax" value="7000" min="0" oninput="updateCalculator()">
+        </div>
+        <div class="form-group">
+          <label>Est. Insurance / year</label>
+          <input type="number" id="insurance" value="1800" min="0" oninput="updateCalculator()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 One-Time Costs</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Closing Costs</label>
+          <input type="number" id="closing-costs" value="10500" min="0" oninput="updateCalculator()">
+        </div>
+        <div class="form-group">
+          <label>Inspection & Appraisal</label>
+          <input type="number" id="inspection-cost" value="1000" min="0" oninput="updateCalculator()">
+        </div>
+        <div class="form-group">
+          <label>Initial Repairs / Updates</label>
+          <input type="number" id="repairs-cost" value="5000" min="0" oninput="updateCalculator()">
+        </div>
+        <div class="form-group">
+          <label>Furniture Budget</label>
+          <input type="number" id="furniture-cost" value="3000" min="0" oninput="updateCalculator()">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📈 Monthly Payment Scenarios</div>
+      <div id="rate-scenarios"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💵 Cash Summary</div>
+      <div class="calc-summary">
+        <div class="calc-summary-item">
+          <div class="calc-summary-num" id="summary-down">$0</div>
+          <div class="calc-summary-label">Down Payment</div>
+        </div>
+        <div class="calc-summary-item gold">
+          <div class="calc-summary-num" id="summary-closing">$0</div>
+          <div class="calc-summary-label">+ Closing Costs</div>
+        </div>
+        <div class="calc-summary-item">
+          <div class="calc-summary-num" id="summary-total-cash">$0</div>
+          <div class="calc-summary-label">Total Cash at Close</div>
+        </div>
+        <div class="calc-summary-item gold">
+          <div class="calc-summary-num" id="summary-outlay">$0</div>
+          <div class="calc-summary-label">+ Repairs / Furnishings</div>
+        </div>
+        <div class="calc-summary-item blue">
+          <div class="calc-summary-num" id="summary-monthly">$0</div>
+          <div class="calc-summary-label">Est. Monthly (6.5%)</div>
+        </div>
+        <div class="calc-summary-item red">
+          <div class="calc-summary-num" id="summary-remaining">$0</div>
+          <div class="calc-summary-label">Remaining Savings</div>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:8px;">
+        <label>Current Savings</label>
+        <input type="number" id="current-savings" value="50000" min="0" oninput="updateCalculator()">
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <strong>⚠️ Disclaimer:</strong> These are estimates. Actual costs vary by lender, location, interest rate, HOA fees, property taxes, and negotiation. Consult a licensed mortgage professional and real estate agent before making financial decisions. This tool is for planning only.
+    </div>
+  </div>
+
+  <!-- ========== TAB 3: SAVED ========== -->
+  <div class="tab-content" id="tab-saved">
+    <div id="saved-area"></div>
+  </div>
+
+</div>
+
+<footer>
+  House Hunter — For planning and research only. Always work with a licensed real estate professional.<br>
+  Soli Deo Gloria 🙏
+</footer>
+
+<script>
+  // ===== TABS =====
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelector('.tab-btn[onclick*="switchTab(\'' + tab + '\')"]').classList.add('active');
+    if (tab === 'calculator') updateCalculator();
+    if (tab === 'saved') renderSaved();
+  }
+
+  // ===== SEARCH =====
+  function getCriteria() {
+    return {
+      maxPrice: document.getElementById('max-price').value,
+      minBeds: document.getElementById('min-beds').value,
+      minBaths: document.getElementById('min-baths').value,
+      radius: document.getElementById('radius').value,
+      propType: document.getElementById('property-type').value,
+      garage: document.getElementById('garage').value
+    };
+  }
+
+  function buildZillowUrl(c) {
+    const priceMax = c.maxPrice;
+    const beds = c.minBeds;
+    const baths = c.minBaths;
+    const propMap = { house: 'single_family', townhouse: 'townhouse', both: 'single_family,townhouse' };
+    const prop = propMap[c.propType];
+    const garageVal = c.garage === 'required' ? '1' : '0';
+
+    const state = JSON.stringify({
+      pagination: {},
+      usersSearchTerm: 'Bloomingdale, IL',
+      mapBounds: {},
+      isMapVisible: true,
+      filterState: {
+        price: { max: priceMax },
+        beds: { min: beds },
+        baths: { min: baths },
+        fsba: { value: false },
+        fsbo: { value: false },
+        nc: { value: false },
+        cmsn: { value: false },
+        auc: { value: false },
+        fore: { value: false },
+        type: { value: prop },
+        garage: { value: garageVal }
+      }
+    });
+
+    return 'https://www.zillow.com/homes/for_sale/?searchQueryState=' + encodeURIComponent(state);
+  }
+
+  function openInBrowser() {
+    const url = buildZillowUrl(getCriteria());
+    window.open(url, '_blank');
+  }
+
+  async function searchHouses() {
+    const btn = document.getElementById('search-btn');
+    const results = document.getElementById('results-area');
+    const c = getCriteria();
+
+    btn.disabled = true;
+    btn.textContent = '🔍 Searching...';
+
+    results.innerHTML = `
+      <div class="loading-state">
+        <div class="spinner">🏠</div>
+        <h3>Finding homes near Bloomingdale...</h3>
+        <p>Pulling live listings from Zillow now. This takes about 10–15 seconds.</p>
+      </div>`;
+
+    try {
+      const url = buildZillowUrl(c);
+      const resp = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url), {
+        signal: AbortSignal.timeout(20000)
+      });
+      const html = await resp.text();
+      const listings = parseZillowHtml(html);
+
+      if (listings.length === 0) {
+        results.innerHTML = `
+          <div class="empty-state">
+            <div class="emoji">🏡</div>
+            <h3>No listings found</h3>
+            <p>No homes matched your criteria right now. Try widening your search — prices change daily.</p>
+            <div class="btn-row" style="justify-content:center; margin-top:14px;">
+              <button class="btn btn-outline" onclick="openInBrowser()">🌐 Open Zillow Directly</button>
+            </div>
+          </div>`;
+      } else {
+        renderListings(listings);
+      }
+    } catch(e) {
+      // Fallback: show browser link with criteria note
+      results.innerHTML = `
+        <div class="error-state" style="margin-bottom:14px;">
+          ⚠️ Couldn't pull listings automatically. Click below to see them in your browser.
+        </div>
+        <div class="card" style="text-align:center;">
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">Live listings require a browser. Here's your pre-loaded search:</p>
+          <button class="btn btn-primary" onclick="openInBrowser()">🌐 Open Zillow Search (${c.minBeds}+ beds, ${c.minBaths}+ baths, up to $${parseInt(c.maxPrice).toLocaleString()})</button>
+        </div>`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '🔍 Find Houses Near Me';
+  }
+
+  function parseZillowHtml(html) {
+    const listings = [];
+    // Zillow search results are JSON embedded in the page
+    const jsonMatch = html.match(/"listings":\s*\[([\s\S]*?)\]\s*[,}]/);
+    if (!jsonMatch) {
+      // Try another pattern
+      const scriptMatch = html.match(/window\.DATA\s*=\s*(\{[\s\S]*?\});/);
+      if (scriptMatch) {
+        try {
+          const data = JSON.parse(scriptMatch[1]);
+          return extractFromZillowData(data);
+        } catch(e) {}
+      }
+      return [];
+    }
+    // Simple JSON array parse
+    try {
+      const arr = JSON.parse('[' + jsonMatch[1] + ']');
+      arr.forEach(item => {
+        listings.push({
+          id: item.id || Math.random().toString(36),
+          price: item.price || item.unformattedPrice || '',
+          address: item.address || '',
+          city: item.city || 'Bloomingdale area',
+          beds: item.beds || item.bedrooms || '',
+          baths: item.baths || item.bathrooms || '',
+          sqft: item.sqft || item.area || '',
+          propertyType: item.propertyType || item.type || '',
+          description: item.description || item.longDescription || '',
+          imageUrl: item.imageUrl || item.image || '',
+          listingUrl: item.detailUrl || item.hdpUrl || item.url || ''
+        });
+      });
+    } catch(e) {}
+    return listings;
+  }
+
+  function extractFromZillowData(data) {
+    const listings = [];
+    const search = data?.searchResults?.listings || data?.results || [];
+    search.forEach(item => {
+      listings.push({
+        id: item.id || Math.random().toString(36),
+        price: item.price || item.unformattedPrice || '',
+        address: item.address || '',
+        city: item.city || 'Bloomingdale area',
+        beds: item.beds || item.bedrooms || '',
+        baths: item.baths || item.bathrooms || '',
+        sqft: item.sqft || item.area || '',
+        propertyType: item.propertyType || item.type || '',
+        description: item.description || item.longDescription || '',
+        imageUrl: item.imageUrl || item.image || '',
+        listingUrl: item.detailUrl || item.hdpUrl || item.url || ''
+      });
+    });
+    return listings;
+  }
+
+  function formatPrice(p) {
+    if (!p) return 'Price N/A';
+    if (typeof p === 'number') return '$' + p.toLocaleString('en-US');
+    return p;
+  }
+
+  function renderListings(listings) {
+    const results = document.getElementById('results-area');
+    const c = getCriteria();
+
+    results.innerHTML = `
+      <div class="results-header">
+        <h2>${listings.length} homes found near Bloomingdale</h2>
+        <span class="results-count">${c.minBeds}+ beds · ${c.minBaths}+ baths · up to $${parseInt(c.maxPrice).toLocaleString()}</span>
+      </div>
+      ${listings.map(l => `
+        <div class="listing-card" id="listing-${l.id}">
+          <div class="listing-header">
+            <div class="listing-thumb">
+              ${l.imageUrl && l.imageUrl.includes('http') ? '<img src="' + l.imageUrl + '" alt="home" onerror="this.parentElement.textContent=\'🏠\'">' : '🏠'}
+            </div>
+            <div class="listing-info">
+              <div class="listing-price">${formatPrice(l.price)}</div>
+              <div class="listing-address">${l.address}</div>
+              <div class="listing-city">${l.city}</div>
+              <div class="listing-specs">
+                ${l.beds ? '<span>' + l.beds + ' bed</span>' : ''}
+                ${l.baths ? '<span>' + l.baths + ' bath</span>' : ''}
+                ${l.sqft ? '<span>' + l.sqft.toLocaleString() + ' sqft</span>' : ''}
+                ${l.propertyType ? '<span>' + l.propertyType + '</span>' : ''}
+              </div>
+            </div>
+          </div>
+          ${l.description ? '<div class="listing-desc">' + l.description.substring(0, 200) + (l.description.length > 200 ? '...' : '') + '</div>' : ''}
+          <div class="listing-footer">
+            <button class="btn btn-gold btn-sm" onclick="saveListing('${l.id}')">❤️ Save</button>
+            <button class="btn btn-outline btn-sm" onclick="window.open('${l.listingUrl && l.listingUrl.startsWith('http') ? l.listingUrl : 'https://www.zillow.com' + l.listingUrl}', '_blank')">🌐 View on Zillow</button>
+          </div>
+        </div>`).join('')}
+      <div style="text-align:center; padding:20px; font-size:0.75rem; color:var(--text-muted);">
+        Results from Zillow · ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} · Listings change frequently — verify availability
+      </div>`;
+  }
+
+  // ===== SAVED =====
+  const SAVED_KEY = 'houseHunterSaved';
+
+  function getSaved() {
+    return JSON.parse(localStorage.getItem(SAVED_KEY) || '[]');
+  }
+
+  function saveSaved(list) {
+    localStorage.setItem(SAVED_KEY, JSON.stringify(list));
+    document.getElementById('saved-count').textContent = list.length;
+  }
+
+  function saveListing(id) {
+    const card = document.getElementById('listing-' + id);
+    if (!card) return;
+
+    const price = card.querySelector('.listing-price')?.textContent || '';
+    const address = card.querySelector('.listing-address')?.textContent || '';
+    const specs = card.querySelector('.listing-specs')?.textContent?.replace(/\s+/g, ' ').trim() || '';
+    const url = card.querySelector('button[onclick*="View on Zillow"]')?.onclick?.toString()?.match(/'([^']+)'/)?.[1] || '';
+
+    const saved = getSaved();
+    if (saved.find(h => h.address === address)) {
+      alert('This home is already saved!');
+      return;
+    }
+
+    saved.unshift({ id, price, address, specs, url, notes: '', savedAt: new Date().toISOString() });
+    saveSaved(saved);
+    alert('❤️ Saved! Check the Saved tab.');
+  }
+
+  function renderSaved() {
+    const saved = getSaved();
+    const area = document.getElementById('saved-area');
+    document.getElementById('saved-count').textContent = saved.length;
+
+    if (saved.length === 0) {
+      area.innerHTML = `
+        <div class="empty-state">
+          <div class="emoji">❤️</div>
+          <h3>No saved homes yet</h3>
+          <p>Find a home you like and click <strong>❤️ Save</strong> to track it here. You can add notes and come back to compare.</p>
+        </div>`;
+      return;
+    }
+
+    area.innerHTML = '<div class="saved-list">' + saved.map(h => `
+      <div class="saved-card">
+        <div class="saved-card-header">
+          <div>
+            <div class="saved-price">${h.price || 'Price N/A'}</div>
+            <div class="saved-address">${h.address}</div>
+            <div class="saved-specs">${h.specs}</div>
+          </div>
+        </div>
+        ${h.notes ? '<div class="saved-notes">"' + h.notes + '"</div>' : ''}
+        <div class="saved-card-footer">
+          <button class="btn btn-outline btn-sm" onclick="editSavedNotes('${h.id}')" style="flex:1;">📝 ${h.notes ? 'Edit Notes' : 'Add Notes'}</button>
+          <button class="btn btn-outline btn-sm" onclick="window.open('${h.url}', '_blank')">🌐 Zillow</button>
+          <button class="btn btn-outline btn-sm" onclick="deleteSaved('${h.id}')" style="color:var(--red);">🗑️</button>
+        </div>
+        <div style="font-size:0.68rem; color:#bbb; margin-top:6px;">Saved ${new Date(h.savedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+      </div>`).join('') + '</div>';
+  }
+
+  function editSavedNotes(id) {
+    const saved = getSaved();
+    const home = saved.find(h => h.id === id);
+    if (!home) return;
+    const notes = prompt('Your notes:', home.notes || '');
+    if (notes !== null) {
+      home.notes = notes;
+      saveSaved(saved);
+      renderSaved();
+    }
+  }
+
+  function deleteSaved(id) {
+    if (!confirm('Remove this home?')) return;
+    const saved = getSaved().filter(h => h.id !== id);
+    saveSaved(saved);
+    renderSaved();
+  }
+
+  // ===== COST CALCULATOR =====
+  function fmt(n) { return '$' + Math.round(n).toLocaleString('en-US'); }
+
+  function computeMonthly(principal, annualRate) {
+    const r = (annualRate / 100) / 12;
+    const n = 360;
+    if (r === 0) return principal / n;
+    return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  }
+
+  function updateCalculator() {
+    const price = parseFloat(document.getElementById('home-price').value) || 0;
+    const downPct = parseFloat(document.getElementById('down-payment-pct').value) / 100;
+    const closing = parseFloat(document.getElementById('closing-costs').value) || 0;
+    const inspection = parseFloat(document.getElementById('inspection-cost').value) || 0;
+    const repairs = parseFloat(document.getElementById('repairs-cost').value) || 0;
+    const furniture = parseFloat(document.getElementById('furniture-cost').value) || 0;
+    const savings = parseFloat(document.getElementById('current-savings').value) || 0;
+    const propTax = parseFloat(document.getElementById('prop-tax').value) || 0;
+    const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+
+    const down = price * downPct;
+    const loan = price - down;
+    const monthlyTax = propTax / 12;
+    const monthlyIns = insurance / 12;
+
+    // Summary
+    document.getElementById('summary-down').textContent = fmt(down);
+    document.getElementById('summary-closing').textContent = fmt(closing);
+    document.getElementById('summary-total-cash').textContent = fmt(down + closing);
+    document.getElementById('summary-outlay').textContent = fmt(repairs + furniture);
+    document.getElementById('summary-remaining').textContent = fmt(Math.max(0, savings - down - closing - repairs - furniture));
+
+    // Monthly scenarios
+    const scenarios = [
+      { rate: 5.5, label: 'Best Case', badge: 'green' },
+      { rate: 6.0, label: 'Good', badge: 'green' },
+      { rate: 6.5, label: 'Typical', badge: 'yellow' },
+      { rate: 7.0, label: 'Moderate', badge: 'yellow' },
+      { rate: 7.5, label: 'High', badge: 'red' }
+    ];
+
+    document.getElementById('rate-scenarios').innerHTML = scenarios.map(s => {
+      const pAndI = computeMonthly(loan, s.rate);
+      const total = pAndI + monthlyTax + monthlyIns;
+      return `
+        <div class="rate-scenario">
+          <div class="rate-scenario-header">
+            <strong>${s.label} — ${s.rate}% APR</strong>
+            <span class="rate-badge ${s.badge}">${s.badge === 'green' ? '✅' : s.badge === 'yellow' ? '⚠️' : '🔴'}</span>
+          </div>
+          <div class="rate-details">
+            <div>P&amp;I: <span>${fmt(pAndI)}/mo</span></div>
+            <div>+ Tax: <span>${fmt(monthlyTax)}/mo</span></div>
+            <div>+ Ins: <span>${fmt(monthlyIns)}/mo</span></div>
+            <div><strong>Total: <span>${fmt(total)}/mo</span></strong></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Set the "typical" as the summary monthly
+    document.getElementById('summary-monthly').textContent = fmt(computeMonthly(loan, 6.5) + monthlyTax + monthlyIns);
+  }
+
+  // Init
+  updateCalculator();
+  document.getElementById('saved-count').textContent = getSaved().length;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prayer Response — John 6 & Matthew 14</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Georgia, serif;
+      background: #fff;
+      color: #222;
+      font-size: 11pt;
+      line-height: 1.65;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 48px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid #1565c0;
+    }
+
+    header h1 {
+      font-size: 20pt;
+      color: #1a5c2a;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    header p {
+      font-size: 10pt;
+      color: #555;
+      font-style: italic;
+    }
+
+    .intro {
+      background: linear-gradient(135deg, #e8f0fe, #f3e5f5);
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      font-size: 10pt;
+      color: #333;
+      line-height: 1.7;
+    }
+
+    .intro strong { color: #1a237e; }
+
+    h2 {
+      font-size: 12pt;
+      color: #fff;
+      background: #1a5c2a;
+      padding: 8px 14px;
+      border-radius: 6px;
+      margin: 30px 0 14px;
+      font-weight: 700;
+    }
+
+    h3 {
+      font-size: 11pt;
+      color: #1a5c2a;
+      font-weight: 700;
+      margin: 18px 0 8px;
+      border-bottom: 2px solid #e8f5e9;
+      padding-bottom: 5px;
+    }
+
+    h3 span { font-size: 10pt; color: #666; font-weight: 400; }
+
+    .prayer-block {
+      background: #f9f9f7;
+      border: 1px solid #e0e0d8;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 14px 0;
+    }
+
+    .prayer-section-title {
+      font-size: 10pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .thanksgiving .prayer-section-title { color: #2e7d32; }
+    .confession .prayer-section-title { color: #c62828; }
+    .supplication .prayer-section-title { color: #1565c0; }
+    .renewal .prayer-section-title { color: #6a1b9a; }
+
+    .prayer-stanza {
+      font-style: italic;
+      font-size: 10.5pt;
+      color: #333;
+      padding: 10px 14px;
+      background: #fff;
+      border-left: 3px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .thanksgiving .prayer-stanza { border-left-color: #4caf50; }
+    .confession .prayer-stanza { border-left-color: #ef5350; }
+    .supplication .prayer-stanza { border-left-color: #42a5f5; }
+    .renewal .prayer-stanza { border-left-color: #ab47bc; }
+
+    .prompt {
+      font-size: 10pt;
+      color: #555;
+      margin-bottom: 8px;
+      padding-left: 2px;
+    }
+
+    .write-lines {
+      border-bottom: 1px solid #bbb;
+      height: 30px;
+      margin-bottom: 8px;
+    }
+
+    .write-lines:last-child { margin-bottom: 0; }
+
+    .response-box {
+      background: #fffde7;
+      border: 1px solid #ffe082;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 16px;
+    }
+
+    .response-box h4 {
+      font-size: 9.5pt;
+      font-weight: 700;
+      color: #f57f17;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .response-lines {
+      border-bottom: 1px solid #ccc;
+      height: 28px;
+      margin-bottom: 8px;
+    }
+
+    /* Two passage columns */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .col-header {
+      background: #1a5c2a;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px 8px 0 0;
+      font-size: 10pt;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    .col-content {
+      border: 1px solid #e0e0d8;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      padding: 14px;
+      background: #f9f9f7;
+    }
+
+    .col-content h4 {
+      font-size: 9.5pt;
+      color: #1a5c2a;
+      margin: 12px 0 6px;
+      font-weight: 700;
+    }
+
+    .col-content h4:first-child { margin-top: 0; }
+
+    .col-content p, .col-content li {
+      font-size: 9.5pt;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .col-content ul {
+      padding-left: 16px;
+      margin: 4px 0;
+    }
+
+    .col-content li { margin-bottom: 3px; }
+
+    /* Closing Section */
+    .closing-prayer {
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border: 2px solid #a5d6a7;
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 28px;
+      text-align: center;
+    }
+
+    .closing-prayer h3 {
+      border: none;
+      margin: 0 0 10px;
+      color: #1a5c2a;
+      font-size: 12pt;
+    }
+
+    .closing-prayer p {
+      font-size: 10pt;
+      color: #444;
+      font-style: italic;
+      line-height: 1.8;
+    }
+
+    .footer-note {
+      margin-top: 28px;
+      padding-top: 14px;
+      border-top: 1px solid #ddd;
+      font-size: 9pt;
+      color: #888;
+      text-align: center;
+      font-style: italic;
+    }
+
+    @media print {
+      body { padding: 20px; }
+      .two-col { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🙏 Prayer Response</h1>
+  <p>John 6:1–15 & Matthew 14:22–33 — Responding to God in Prayer</p>
+</header>
+
+<div class="intro">
+  <strong>How to use this:</strong> After reading and discussing the passages, take time to respond to God in prayer. Work through each section below — reading the prompts, writing your own prayers in the spaces provided, and praying aloud (individually or as a group). There are no rules here — just you and God.
+</div>
+
+<!-- PRAYER RESPONSE PER PASSAGE -->
+<div class="two-col">
+  <!-- John 6 -->
+  <div>
+    <div class="col-header">📘 John 6:1–15 — The Feeding of the 5,000</div>
+    <div class="col-content">
+      <h4>🙏 Thanksgiving</h4>
+      <p>Thank God for a time when He provided for you in a way that seemed impossible — when the resources didn't add up but He came through anyway.</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+
+      <h4>😭 Confession</h4>
+      <p>Where have you said "what is that among so many?" — dismissing what little you have as too small to matter for God's work?</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+
+      <h4>🛐 Supplication</h4>
+      <p>What impossible need are you facing right now? Bring it to Jesus — not as a demand, but as a honest request.</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+
+      <h4>✨ Renewal</h4>
+      <p>Ask God to examine your heart: <em>Why am I following Jesus?</em> Am I following for what He can do — or for who He is?</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+    </div>
+  </div>
+
+  <!-- Matthew 14 -->
+  <div>
+    <div class="col-header">📗 Matthew 14:22–33 — Walking on Water</div>
+    <div class="col-content">
+      <h4>🙏 Thanksgiving</h4>
+      <p>Thank God for a time when He walked into your storm — when you didn't see Him coming, but He was there all along.</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+
+      <h4>😭 Confession</h4>
+      <p>Where have you taken your eyes off Jesus and looked at your circumstances instead? What "wave" is pulling you under right now?</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+
+      <h4>🛐 Supplication</h4>
+      <p>What is Jesus calling you to step out into — but fear has kept you in the boat? Ask Him for the faith to come.</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+
+      <h4>✨ Renewal</h4>
+      <p>When you sink, Jesus reaches out immediately. Is there an area where you need to receive His grace instead of expecting His rebuke?</p>
+      <div class="response-lines"></div>
+      <div class="response-lines"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GENERAL PRAYER RESPONSE -->
+<h2>✍️ Written Prayers — Make Them Your Own</h2>
+
+<div class="prayer-block confession">
+  <div class="prayer-section-title">😭 Confession — The "Five Loaves and Two Fish" Prayer</div>
+  <p class="prompt">God, I confess that I often think what I have is too small to be useful to You...</p>
+  <div class="write-lines"></div>
+  <div class="write-lines"></div>
+  <p class="prompt">Help me to stop comparing my resources to the size of the need...</p>
+  <div class="write-lines"></div>
+</div>
+
+<div class="prayer-block supplication">
+  <div class="prayer-section-title">🛐 Supplication — The "Storm on the Lake" Prayer</div>
+  <p class="prompt">Father, right now I feel like I'm rowing hard against the wind...</p>
+  <div class="write-lines"></div>
+  <div class="write-lines"></div>
+  <p class="prompt">I need You to say to me: "Be of good cheer, it is I; do not be afraid."</p>
+  <div class="write-lines"></div>
+</div>
+
+<div class="prayer-block thanksgiving">
+  <div class="prayer-section-title">🙏 Thanksgiving — The "Twelve Baskets" Prayer</div>
+  <p class="prompt">Lord, thank You for providing more than I need — even when I didn't see how it was possible...</p>
+  <div class="write-lines"></div>
+  <div class="write-lines"></div>
+  <p class="prompt">Help me not to waste what You have given, but to use it faithfully...</p>
+  <div class="write-lines"></div>
+</div>
+
+<div class="prayer-block renewal">
+  <div class="prayer-section-title">✨ Renewal — The "Worship After the Miracle" Prayer</div>
+  <p class="prompt">Jesus, when I witness Your power and provision, let me not respond like the crowds who wanted You for what You could do...</p>
+  <div class="write-lines"></div>
+  <div class="write-lines"></div>
+  <p class="prompt">Teach me to fall at Your feet and say: "Truly, You are the Son of God."</p>
+  <div class="write-lines"></div>
+</div>
+
+<!-- PETER MOMENT -->
+<h2>🚶 The Peter Moment — For Group or Personal Use</h2>
+
+<div class="prayer-block" style="background:#f3e5f5; border-color:#ce93d8;">
+  <div class="prayer-section-title" style="color:#6a1b9a;">A Guided Moment of Reflection</div>
+
+  <p style="font-size:10.5pt; color:#333; margin-bottom:12px;">Read this slowly. Let it sink in. Then respond:</p>
+
+  <div class="prayer-stanza" style="border-left-color:#ab47bc;">
+    Peter was in the boat. The storm was real. The waves were crashing.<br>
+    And then Jesus said: <em>"Come."</em><br><br>
+    Peter could have stayed in the boat. He could have said "not me, Lord."<br>
+    But he asked to come — and he got out.<br><br>
+    He walked. And then he sank.<br><br>
+    And Jesus reached out His hand <em>immediately</em>.
+  </div>
+
+  <p class="prompt">What is Jesus calling you to step out of right now?</p>
+  <div class="write-lines"></div>
+
+  <p class="prompt">What would it look like to trust Him even if you sink?</p>
+  <div class="write-lines"></div>
+
+  <p class="prompt">Where in your life do you need to hear Jesus say: <em>"O you of little faith, why did you doubt?"</em> — and receive grace instead of judgment?</p>
+  <div class="write-lines"></div>
+</div>
+
+<!-- CLOSING PRAYER -->
+<div class="closing-prayer">
+  <h3>🙏 Closing Prayer — Pray This Together</h3>
+  <p>
+    Lord, we come to You with hands open — not clenched around our fear.<br><br>
+    You see our needs before we speak. You walk into our storms before we call.<br>
+    You take what seems impossible and multiply it.<br>
+    You call us out of the boat and You catch us when we sink.<br><br>
+    Give us faith that looks at You and not at the waves.<br>
+    Give us worship that responds to who You are, not just what You do.<br>
+    Give us the courage to step — even if we sink.<br><br>
+    You are the Bread of Life. You are the One who walks on water.<br>
+    You are the Son of God.<br><br>
+    <strong>And we worship You.</strong><br><br>
+    Amen.
+  </p>
+</div>
+
+<p class="footer-note">John 6:1–15 & Matthew 14:22–33 | Prayer Response Handout — for personal or group use</p>
+
+</body>
+</html>

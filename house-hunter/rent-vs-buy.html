@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>House Comparison — Buy $300K vs $350K vs Rent 6 Months</title>
+  <style>
+    :root {
+      --green: #1a5c2a;
+      --green-light: #e8f5e9;
+      --blue: #1565c0;
+      --blue-light: #e3f2fd;
+      --gold: #b8860b;
+      --gold-light: #fffde7;
+      --red: #c62828;
+      --red-light: #ffebee;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --border: #ddd;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1a5c2a, #2e7d32);
+      color: white;
+      padding: 20px 20px 16px;
+      text-align: center;
+    }
+
+    header h1 { font-size: clamp(1.2rem, 4vw, 1.6rem); font-weight: 700; margin-bottom: 4px; }
+    header p { opacity: 0.85; font-size: 0.8rem; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+    /* Three Scenario Cards */
+    .scenario-header {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .scenario-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      border-top: 5px solid;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+
+    .scenario-card.buy-low { border-top-color: var(--green); }
+    .scenario-card.buy-high { border-top-color: var(--blue); }
+    .scenario-card.rent { border-top-color: var(--gold); }
+
+    .scenario-name { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .scenario-card.buy-low .scenario-name { color: var(--green); }
+    .scenario-card.buy-high .scenario-name { color: var(--blue); }
+    .scenario-card.rent .scenario-name { color: var(--gold); }
+
+    .scenario-price { font-size: 1.7rem; font-weight: 800; margin-bottom: 2px; }
+    .scenario-card.buy-low .scenario-price { color: var(--green); }
+    .scenario-card.buy-high .scenario-price { color: var(--blue); }
+    .scenario-card.rent .scenario-price { color: var(--gold); }
+
+    .scenario-detail { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Inputs Section */
+    .card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+
+    .card-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+    .input-section-title { font-size: 0.8rem; font-weight: 700; color: var(--text); margin: 16px 0 10px; padding-bottom: 4px; border-bottom: 1px solid #eee; }
+    .input-section-title:first-child { margin-top: 0; }
+
+    .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    .input-group { display: flex; flex-direction: column; gap: 4px; }
+    .input-group.full { grid-column: 1 / -1; }
+
+    .input-group label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); }
+    .input-group input, .input-group select {
+      padding: 8px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.88rem;
+      background: white;
+      color: var(--text);
+      outline: none;
+      width: 100%;
+    }
+    .input-group input:focus, .input-group select:focus { border-color: var(--green); }
+    .input-group input[type="number"] { -moz-appearance: textfield; }
+    .input-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    /* Summary strip */
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .summary-item {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .summary-item.green { background: var(--green-light); }
+    .summary-item.blue { background: var(--blue-light); }
+    .summary-item.gold { background: var(--gold-light); }
+
+    .summary-num { font-size: 1.4rem; font-weight: 800; }
+    .summary-item.green .summary-num { color: var(--green); }
+    .summary-item.blue .summary-num { color: var(--blue); }
+    .summary-item.gold .summary-num { color: var(--gold); }
+
+    .summary-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
+
+    /* Comparison Table */
+    .comp-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    .comp-table th {
+      text-align: left;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      padding: 8px 6px;
+      border-bottom: 2px solid var(--border);
+      background: #fafafa;
+    }
+    .comp-table th:not(:first-child) { text-align: right; }
+    .comp-table td { padding: 8px 6px; border-bottom: 1px solid #f0f0f0; }
+    .comp-table td:not(:first-child) { text-align: right; font-weight: 600; }
+    .comp-table tr:nth-child(even) td { background: #fafafa; }
+    .comp-table tr.winner td { background: var(--green-light) !important; font-weight: 700; }
+    .comp-table tr.section-header td {
+      background: #f0f0f0;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    /* Insight box */
+    .insight-box {
+      background: var(--gold-light);
+      border: 1px solid var(--gold);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .insight-box h3 { font-size: 0.82rem; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+    .insight-box p { font-size: 0.85rem; color: #5d4037; line-height: 1.7; }
+
+    /* Footer */
+    footer { text-align: center; padding: 24px 16px; font-size: 0.72rem; color: var(--text-muted); }
+
+    @media (max-width: 750px) {
+      .scenario-header { grid-template-columns: 1fr; }
+      .summary-strip { grid-template-columns: 1fr; }
+      .input-grid { grid-template-columns: 1fr 1fr; }
+      .comp-table { font-size: 0.75rem; }
+    }
+
+    @media (max-width: 480px) {
+      .input-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🏠 House Comparison — $300K vs $350K vs Rent 6 Months</h1>
+  <p>All three scenarios starting January 2027 · Your timeline, your numbers</p>
+</header>
+
+<div class="container">
+
+  <!-- Three Scenario Cards -->
+  <div class="scenario-header">
+    <div class="scenario-card buy-low">
+      <div class="scenario-name">🏠 Scenario A — Buy $300K</div>
+      <div class="scenario-price" id="card-a-price">$300,000</div>
+      <div class="scenario-detail" id="card-a-detail">20% down · $1,518/mo PITI</div>
+    </div>
+    <div class="scenario-card buy-high">
+      <div class="scenario-name">🏠 Scenario B — Buy $350K</div>
+      <div class="scenario-price" id="card-b-price">$350,000</div>
+      <div class="scenario-detail" id="card-b-detail">20% down · $1,770/mo PITI</div>
+    </div>
+    <div class="scenario-card rent">
+      <div class="scenario-name">📦 Scenario C — Rent 6 Months</div>
+      <div class="scenario-price" id="card-c-rent">$2,000/mo</div>
+      <div class="scenario-detail" id="card-c-detail">Jan–Jun 2027 · Invest $70K</div>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="card">
+    <div class="card-title">⚙️ Your Numbers — Enter Your Own</div>
+
+    <div class="input-section-title">💰 House Prices</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Scenario A — House Price</label>
+        <input type="number" id="price-a" value="300000" min="50000" step="1000" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Scenario B — House Price</label>
+        <input type="number" id="price-b" value="350000" min="50000" step="1000" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Scenario C — Monthly Rent</label>
+        <input type="number" id="rent-c" value="2000" min="0" step="50" oninput="calculate()">
+      </div>
+    </div>
+
+    <div class="input-section-title">📋 Shared Assumptions</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Down Payment %</label>
+        <select id="down-pct" onchange="calculate()">
+          <option value="0.03">3% (FHA)</option>
+          <option value="0.05">5% (Conventional)</option>
+          <option value="0.10">10%</option>
+          <option value="0.20" selected>20% (avoids PMI)</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Interest Rate %</label>
+        <input type="number" id="rate" value="6.5" min="1" max="15" step="0.01" oninput="calculate()"> %
+      </div>
+      <div class="input-group">
+        <label>Closing Costs %</label>
+        <select id="closing-pct" onchange="calculate()">
+          <option value="0.015">1.5%</option>
+          <option value="0.020" selected>2.0%</option>
+          <option value="0.025">2.5%</option>
+          <option value="0.030">3.0%</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="input-section-title">📈 Growth & Rent</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Annual Market Return (if investing)</label>
+        <input type="number" id="market-return" value="7" min="0" max="15" step="0.5" oninput="calculate()"> %
+      </div>
+      <div class="input-group">
+        <label>Annual Home Appreciation</label>
+        <input type="number" id="home-apprec" value="3" min="0" max="10" step="0.5" oninput="calculate()"> %
+      </div>
+      <div class="input-group">
+        <label>Rent Increase / year</label>
+        <input type="number" id="rent-increase" value="3" min="0" max="10" step="0.5" oninput="calculate()"> %
+      </div>
+    </div>
+
+    <div class="input-section-title">🏠 Ongoing Costs</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Property Tax / year</label>
+        <input type="number" id="prop-tax" value="7000" min="0" step="100" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Annual Maintenance (1% of home)</label>
+        <input type="number" id="maintenance" value="1" min="0" max="3" step="0.1" oninput="calculate()"> %
+      </div>
+      <div class="input-group">
+        <label>Monthly HOA (if any)</label>
+        <input type="number" id="hoa" value="0" min="0" step="25" oninput="calculate()">
+      </div>
+    </div>
+
+    <div class="input-section-title">📅 Timeline</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Rent Period (months)</label>
+        <input type="number" id="rent-months" value="6" min="1" max="60" step="1" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Projection Years</label>
+        <input type="number" id="proj-years" value="30" min="5" max="50" step="1" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Realtor Fees at Sale %</label>
+        <input type="number" id="realtor-fee" value="6" min="0" max="10" step="0.5" oninput="calculate()"> %
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Strip -->
+  <div class="summary-strip">
+    <div class="summary-item green">
+      <div class="summary-num" id="sum-a-wins">—</div>
+      <div class="summary-label">$300K Buys You @ Year 30</div>
+    </div>
+    <div class="summary-item blue">
+      <div class="summary-num" id="sum-b-wins">—</div>
+      <div class="summary-label">$350K Buys You @ Year 30</div>
+    </div>
+    <div class="summary-item gold">
+      <div class="summary-num" id="sum-c-wins">—</div>
+      <div class="summary-label">Rent 6mo Net Worth @ Year 30</div>
+    </div>
+  </div>
+
+  <!-- Detailed Comparison Table -->
+  <div class="card">
+    <div class="card-title">📊 Full Comparison Table</div>
+    <div class="table-scroll">
+      <table class="comp-table" id="comp-table"></table>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight-box">
+    <h3>💡 What This Means for You</h3>
+    <p id="insight-text">Enter your numbers above to see the full comparison.</p>
+  </div>
+
+  <!-- Key Events Timeline -->
+  <div class="card">
+    <div class="card-title">📅 Key Financial Events — All Three Scenarios</div>
+    <table class="comp-table" id="timeline-table"></table>
+  </div>
+
+</div>
+
+<footer>
+  Based on your Future Budget Calculator assumptions · Does not include utilities, furnishings, or transaction emotions<br>
+  Soli Deo Gloria 🙏
+</footer>
+
+<script>
+  function fmt(n) {
+    if (isNaN(n) || n === null) return '—';
+    if (Math.abs(n) >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+    if (Math.abs(n) >= 100000) return '$' + (n/1000).toFixed(0) + 'K';
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function fmtpct(n) { return (n * 100).toFixed(1) + '%'; }
+
+  function monthlyPayment(principal, annualRate, years) {
+    const r = annualRate / 12;
+    const n = years * 12;
+    if (r === 0) return principal / n;
+    return principal * (r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+  }
+
+  function remainingBalance(principal, annualRate, years, yearsPaid) {
+    const r = annualRate / 12;
+    const n = years * 12;
+    const m = Math.min(yearsPaid * 12, n);
+    if (m === 0) return principal;
+    let bal = principal;
+    const pmt = principal * (r * Math.pow(1+r, n)) / (Math.pow(1+r, n) - 1);
+    for (let i = 0; i < m; i++) {
+      bal = bal * (1 + r) - pmt;
+    }
+    return Math.max(0, bal);
+  }
+
+  function calculate() {
+    const priceA = parseFloat(document.getElementById('price-a').value) || 300000;
+    const priceB = parseFloat(document.getElementById('price-b').value) || 350000;
+    const rentC = parseFloat(document.getElementById('rent-c').value) || 2000;
+    const downPct = parseFloat(document.getElementById('down-pct').value);
+    const rate = parseFloat(document.getElementById('rate').value) / 100;
+    const closingPct = parseFloat(document.getElementById('closing-pct').value);
+    const mktReturn = parseFloat(document.getElementById('market-return').value) / 100;
+    const homeApprec = parseFloat(document.getElementById('home-apprec').value) / 100;
+    const rentInc = parseFloat(document.getElementById('rent-increase').value) / 100;
+    const propTax = parseFloat(document.getElementById('prop-tax').value) || 0;
+    const maintPct = parseFloat(document.getElementById('maintenance').value) / 100;
+    const hoa = parseFloat(document.getElementById('hoa').value) || 0;
+    const rentMonths = parseInt(document.getElementById('rent-months').value) || 6;
+    const projYears = parseInt(document.getElementById('proj-years').value) || 30;
+    const realtorFee = parseFloat(document.getElementById('realtor-fee').value) / 100;
+
+    // --- SCENARIO A: Buy priceA ---
+    const downA = priceA * downPct;
+    const closingA = priceA * closingPct;
+    const loanA = priceA - downA;
+    const pmtA = monthlyPayment(loanA, rate, 30);
+    const monthlyTaxA = propTax / 12;
+    const monthlyMaintA = (priceA * maintPct) / 12;
+    const monthlyPITIA = pmtA + monthlyTaxA + monthlyMaintA + hoa;
+
+    // --- SCENARIO B: Buy priceB ---
+    const downB = priceB * downPct;
+    const closingB = priceB * closingPct;
+    const loanB = priceB - downB;
+    const pmtB = monthlyPayment(loanB, rate, 30);
+    const monthlyTaxB = propTax / 12;
+    const monthlyMaintB = (priceB * maintPct) / 12;
+    const monthlyPITIB = pmtB + monthlyTaxB + monthlyMaintB + hoa;
+
+    // --- SCENARIO C: Rent rentMonths months ---
+    const totalRentCost = (() => {
+      let total = 0;
+      for (let m = 0; m < rentMonths; m++) {
+        total += rentC * Math.pow(1 + rentInc, m/12);
+      }
+      return total;
+    })();
+
+    // After rent, renter invests the down payment in the market
+    // Invested amount = what would have been down payment + closing costs
+    const investedC = downA + closingA; // what they save by not buying
+    const rentNetWorth30 = investedC * Math.pow(1 + mktReturn, projYears) - totalRentCost;
+
+    // Actually, for a fair comparison: renter rents for rentMonths then... what?
+    // Assumption: renter buys the same $300k house after the rent period
+    // So compare: buy $300k at month 0 vs. rent for 6mo then buy $300k
+    // But Brett wants to compare: buy $300k vs buy $350k vs rent 6mo
+    // For rent 6mo scenario, we assume they invest the down payment and rent
+
+    // Year-by-year comparison starting January 2027
+    const years = projYears;
+    let compRows = '';
+
+    // Header
+    compRows += `<tr>
+      <th>Metric</th>
+      <th style="color:var(--green)">🏠 Buy $${(priceA/1000).toFixed(0)}K</th>
+      <th style="color:var(--blue)">🏠 Buy $${(priceB/1000).toFixed(0)}K</th>
+      <th style="color:var(--gold)">📦 Rent ${rentMonths}mo then Invest</th>
+    </tr>`;
+
+    // --- UPFRONT COSTS ---
+    compRows += `<tr class="section-header"><td colspan="4">💸 Upfront Costs (January 2027)</td></tr>`;
+    compRows += `<tr>
+      <td>Down Payment</td>
+      <td>${fmt(downA)}</td>
+      <td>${fmt(downB)}</td>
+      <td>${fmt(0)}</td>
+    </tr>`;
+    compRows += `<tr>
+      <td>Closing Costs</td>
+      <td>${fmt(closingA)}</td>
+      <td>${fmt(closingB)}</td>
+      <td>${fmt(0)}</td>
+    </tr>`;
+    compRows += `<tr>
+      <td>First Month's PITI</td>
+      <td>${fmt(monthlyPITIA)}</td>
+      <td>${fmt(monthlyPITIB)}</td>
+      <td>${fmt(rentC)}</td>
+    </tr>`;
+    compRows += `<tr>
+      <td>Rent During 6 Months</td>
+      <td>${fmt(0)}</td>
+      <td>${fmt(0)}</td>
+      <td>${fmt(totalRentCost)}</td>
+    </tr>`;
+    compRows += `<tr style="font-weight:700; background:#f0f0f0">
+      <td>Total Cash Out at Start</td>
+      <td>${fmt(downA + closingA + monthlyPITIA)}</td>
+      <td>${fmt(downB + closingB + monthlyPITIB)}</td>
+      <td>${fmt(totalRentCost + rentC)}</td>
+    </tr>`;
+
+    // --- YEAR BY YEAR ---
+    compRows += `<tr class="section-header"><td colspan="4">📈 Year-by-Year Net Worth (Starting January 2027)</td></tr>`;
+
+    let rows = [];
+    let bestAtYear10 = null, bestAtYear20 = null, bestAtYear30 = null;
+
+    for (let y = 0; y <= years; y++) {
+      // SCENARIO A: Buy at priceA from year 0
+      const homeValA = priceA * Math.pow(1 + homeApprec, y);
+      const mortgageBalA = remainingBalance(loanA, rate, 30, y);
+      const equityA = homeValA - mortgageBalA;
+      const equityA_real = Math.max(0, equityA);
+
+      // SCENARIO B: Buy at priceB from year 0
+      const homeValB = priceB * Math.pow(1 + homeApprec, y);
+      const mortgageBalB = remainingBalance(loanB, rate, 30, y);
+      const equityB = homeValB - mortgageBalB;
+      const equityB_real = Math.max(0, equityB);
+
+      // SCENARIO C: Rent for rentMonths months, then invest
+      let netWorthC = 0;
+      if (y === 0) {
+        netWorthC = 0; // starting position
+      } else if (y * 12 <= rentMonths) {
+        // Still renting — invested amount grows
+        netWorthC = investedC * Math.pow(1 + mktReturn, y) - totalRentCost * (y / (rentMonths/12));
+      } else {
+        // After rent period — invested amount has been growing
+        // Assume they eventually buy the $300k house at year (rentMonths/12)
+        const yearsAfterRent = y - rentMonths/12;
+        netWorthC = investedC * Math.pow(1 + mktReturn, y); // invested down payment grows
+        // They still pay rent for rentMonths, then... they buy a $300k house
+        // For comparison fairness: renter doesn't buy, just invests
+        // Their net worth = invested capital growing
+        netWorthC = investedC * Math.pow(1 + mktReturn, y);
+        // Subtract the cost of rent over rentMonths
+        netWorthC -= totalRentCost;
+      }
+
+      const vals = [equityA_real, equityB_real, Math.max(0, netWorthC)];
+      const best = Math.max(...vals);
+      const bestIdx = vals.indexOf(best);
+
+      if (y === 10) bestAtYear10 = bestIdx;
+      if (y === 20) bestAtYear20 = bestIdx;
+      if (y === 30 || y === years) bestAtYear30 = bestIdx;
+
+      const age = 24 + y;
+      const rowClass = best === 0 ? 'winner' : '';
+
+      if (y === 0 || y === 1 || y === 2 || y === 5 || y === 10 || y === 15 || y === 20 || y === 25 || y === 30 || y === years) {
+        compRows += `<tr class="${rowClass}">
+          <td>Year ${y} (Age ${age})</td>
+          <td style="color:${vals[0] === best ? 'var(--green)' : 'inherit'}">${fmt(vals[0])}${vals[0] === best && y > 0 ? ' ✅' : ''}</td>
+          <td style="color:${vals[1] === best ? 'var(--blue)' : 'inherit'}">${fmt(vals[1])}${vals[1] === best && y > 0 ? ' ✅' : ''}</td>
+          <td style="color:${vals[2] === best ? 'var(--gold)' : 'inherit'}">${fmt(Math.max(0, vals[2]))}${vals[2] === best && y > 0 ? ' ✅' : ''}</td>
+        </tr>`;
+      }
+    }
+
+    // Summary rows
+    compRows += `<tr class="section-header"><td colspan="4">💵 Key Financial Milestones</td></tr>`;
+
+    const yr10A = priceA * Math.pow(1+homeApprec, 10) - remainingBalance(loanA, rate, 30, 10);
+    const yr10B = priceB * Math.pow(1+homeApprec, 10) - remainingBalance(loanB, rate, 30, 10);
+    const yr10C = investedC * Math.pow(1+mktReturn, 10) - totalRentCost;
+    compRows += `<tr><td>Home Equity / Investment @ Year 10</td><td>${fmt(Math.max(0,yr10A))}</td><td>${fmt(Math.max(0,yr10B))}</td><td>${fmt(Math.max(0,yr10C))}</td></tr>`;
+
+    const yr20A = priceA * Math.pow(1+homeApprec, 20) - remainingBalance(loanA, rate, 30, 20);
+    const yr20B = priceB * Math.pow(1+homeApprec, 20) - remainingBalance(loanB, rate, 30, 20);
+    const yr20C = investedC * Math.pow(1+mktReturn, 20) - totalRentCost;
+    compRows += `<tr><td>Home Equity / Investment @ Year 20</td><td>${fmt(Math.max(0,yr20A))}</td><td>${fmt(Math.max(0,yr20B))}</td><td>${fmt(Math.max(0,yr20C))}</td></tr>`;
+
+    const yr30A = priceA * Math.pow(1+homeApprec, 30) - remainingBalance(loanA, rate, 30, 30);
+    const yr30B = priceB * Math.pow(1+homeApprec, 30) - remainingBalance(loanB, rate, 30, 30);
+    const yr30C = investedC * Math.pow(1+mktReturn, 30) - totalRentCost;
+    compRows += `<tr style="background:var(--green-light);font-weight:800"><td>Home Equity / Investment @ Year ${years}</td><td style="color:var(--green)">${fmt(Math.max(0,yr30A))}</td><td style="color:var(--blue)">${fmt(Math.max(0,yr30B))}</td><td style="color:var(--gold)">${fmt(Math.max(0,yr30C))}</td></tr>`;
+
+    // If sold at year 30
+    const sellA = (priceA * Math.pow(1+homeApprec,30)) * (1 - realtorFee);
+    const netProceedsA = sellA - remainingBalance(loanA, rate, 30, 30);
+    const sellB = (priceB * Math.pow(1+homeApprec,30)) * (1 - realtorFee);
+    const netProceedsB = sellB - remainingBalance(loanB, rate, 30, 30);
+    compRows += `<tr class="section-header"><td colspan="4">🏦 If You Sell at Year ${years} (After ${(realtorFee*100).toFixed(1)}% Realtor Fees)</td></tr>`;
+    compRows += `<tr style="background:var(--green-light);font-weight:800"><td>Net Proceeds After Mortgage</td><td style="color:var(--green)">${fmt(Math.max(0,netProceedsA))}</td><td style="color:var(--blue)">${fmt(Math.max(0,netProceedsB))}</td><td style="color:var(--gold)">${fmt(Math.max(0,yr30C))}</td></tr>`;
+
+    // Monthly cash flow
+    compRows += `<tr class="section-header"><td colspan="4">💵 Monthly Cash Flow Impact</td></tr>`;
+    compRows += `<tr><td>Monthly Housing Cost</td><td>${fmt(monthlyPITIA)}/mo</td><td>${fmt(monthlyPITIB)}/mo</td><td>${fmt(rentC)}/mo (${rentMonths}mo only)</td></tr>`;
+    compRows += `<tr><td>vs. Rent Extra Cost</td><td>${fmt(monthlyPITIA - rentC)}/mo</td><td>${fmt(monthlyPITIB - rentC)}/mo</td><td>—</td></tr>`;
+    compRows += `<tr><td>Equity Build / Month (yr 1)</td><td>${fmt((downA/30/12) + (homeApprec * priceA / 12))}</td><td>${fmt((downB/30/12) + (homeApprec * priceB / 12))}</td><td>${fmt(mktReturn/12 * investedC)}</td></tr>`;
+
+    document.getElementById('comp-table').innerHTML = compRows;
+
+    // Summary numbers
+    document.getElementById('sum-a-wins').textContent = fmt(Math.max(0, yr30A));
+    document.getElementById('sum-b-wins').textContent = fmt(Math.max(0, yr30B));
+    document.getElementById('sum-c-wins').textContent = fmt(Math.max(0, yr30C));
+
+    // Update scenario cards
+    document.getElementById('card-a-price').textContent = '$' + (priceA/1000).toFixed(0) + 'K';
+    document.getElementById('card-a-detail').textContent = fmtpct(downPct) + ' down · ' + fmt(monthlyPITIA) + '/mo PITI';
+    document.getElementById('card-b-price').textContent = '$' + (priceB/1000).toFixed(0) + 'K';
+    document.getElementById('card-b-detail').textContent = fmtpct(downPct) + ' down · ' + fmt(monthlyPITIB) + '/mo PITI';
+    document.getElementById('card-c-rent').textContent = fmt(rentC) + '/mo';
+    document.getElementById('card-c-detail').textContent = 'Jan–Jul ' + (2027 + Math.floor(rentMonths/12)) + ' · Invest ' + fmt(investedC);
+
+    // Generate insight
+    const winner30 = [yr30A, yr30B, yr30C].indexOf(Math.max(yr30A, yr30B, yr30C));
+    const winnerNames = ['$300K House', '$350K House', 'Rent 6mo + Invest'];
+    const winnerValues = [fmt(Math.max(0, yr30A)), fmt(Math.max(0, yr30B)), fmt(Math.max(0, yr30C))];
+
+    const deltaA_C = yr30A - yr30C;
+    const deltaB_A = yr30B - yr30A;
+    const deltaC_A = yr30C - yr30A;
+
+    let insight = `<strong>${winnerNames[winner30]} wins at year ${years}</strong> with ${winnerValues[winner30]} in equity/investment. `;
+
+    if (winner30 === 0) {
+      insight += `The $${(priceA/1000).toFixed(0)}K house builds ${fmt(Math.max(0, yr30A))} by year ${years}. `;
+      insight += `vs. renting, buying $300K nets you <strong>${fmt(deltaA_C)} more</strong> over 30 years. `;
+    } else if (winner30 === 1) {
+      insight += `The $${(priceB/1000).toFixed(0)}K house builds ${fmt(Math.max(0, yr30B))}. `;
+      insight += `But the $350K costs <strong>${fmt(deltaB_A)} more</strong> upfront and in monthly costs than the $300K. `;
+    } else {
+      insight += `The renter invests ${fmt(investedC)} at ${fmtpct(mktReturn)}/year. `;
+      insight += `After ${rentMonths} months of rent, their net worth is ${fmt(Math.max(0, yr30C))}. `;
+      if (yr30C > yr30A) {
+        insight += `<strong>Renting wins by ${fmt(yr30C - yr30A)}.</strong> `;
+      }
+    }
+
+    insight += `<br><br>`;
+    insight += `<strong>Monthly trade-off:</strong> Buying costs ${fmt(monthlyPITIA - rentC)}/mo more than renting (for the $300K), but ${fmt(monthlyPITIA - rentC) === '$0' ? '' : 'that goes toward equity instead of a landlord.'} `;
+    insight += `At year 10, the ${winnerNames[winner30]} scenario is ${winnerValues[winner30]}.`;
+
+    document.getElementById('insight-text').innerHTML = insight;
+
+    // Timeline table
+    let tlRows = `<tr><th>When</th><th>$300K Buy</th><th>$350K Buy</th><th>Rent ${rentMonths}mo</th></tr>`;
+    tlRows += `<tr><td>January 2027</td><td>Down payment + close → Move in</td><td>Down payment + close → Move in</td><td>Sign lease, invest ${fmt(investedC)}</td></tr>`;
+    tlRows += `<tr><td>July 2027 (${rentMonths}mo)</td><td>${fmt(monthlyPITIA)}/mo ongoing</td><td>${fmt(monthlyPITIB)}/mo ongoing</td><td>Rent ends, invest grows</td></tr>`;
+    tlRows += `<tr><td>Year 5 (2032)</td><td>${fmt(Math.max(0,priceA * Math.pow(1+homeApprec,5) - remainingBalance(loanA,rate,30,5)))} equity</td><td>${fmt(Math.max(0,priceB * Math.pow(1+homeApprec,5) - remainingBalance(loanB,rate,30,5)))} equity</td><td>${fmt(investedC * Math.pow(1+mktReturn,5))} invested</td></tr>`;
+    tlRows += `<tr><td>Year 10 (2037)</td><td>${fmt(Math.max(0,yr10A))} equity</td><td>${fmt(Math.max(0,yr10B))} equity</td><td>${fmt(Math.max(0,yr10C))} invested</td></tr>`;
+    tlRows += `<tr><td>Year 20 (2047)</td><td>${fmt(Math.max(0,yr20A))} equity</td><td>${fmt(Math.max(0,yr20B))} equity</td><td>${fmt(Math.max(0,yr20C))} invested</td></tr>`;
+    tlRows += `<tr style="font-weight:800"><td>Year ${years} (${2027+years})</td><td style="color:var(--green)">${fmt(Math.max(0,yr30A))} equity</td><td style="color:var(--blue)">${fmt(Math.max(0,yr30B))} equity</td><td style="color:var(--gold)">${fmt(Math.max(0,yr30C))} invested</td></tr>`;
+    document.getElementById('timeline-table').innerHTML = tlRows;
+  }
+
+  calculate();
+</script>
+
+</body>
+</html>

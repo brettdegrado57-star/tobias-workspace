@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cash Cushion Check — Can We Afford to Buy?</title>
+  <style>
+    :root {
+      --green: #1a5c2a;
+      --green-light: #e8f5e9;
+      --blue: #1565c0;
+      --blue-light: #e3f2fd;
+      --gold: #b8860b;
+      --gold-light: #fffde7;
+      --red: #c62828;
+      --red-light: #ffebee;
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --text-muted: #666;
+      --border: #ddd;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    header {
+      background: linear-gradient(135deg, #1a5c2a, #2e7d32);
+      color: white; padding: 20px 20px 16px; text-align: center;
+    }
+    header h1 { font-size: clamp(1.1rem, 4vw, 1.5rem); font-weight: 700; margin-bottom: 4px; }
+    header p { opacity: 0.85; font-size: 0.8rem; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 16px; }
+
+    .card { background: var(--card); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .card-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+    /* Starting position */
+    .position-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .pos-item { background: #f9f9f7; border-radius: 10px; padding: 14px; text-align: center; }
+    .pos-num { font-size: 1.4rem; font-weight: 800; color: var(--green); }
+    .pos-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 3px; font-weight: 600; }
+
+    /* Scenario cards */
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .scen-card {
+      border-radius: var(--radius);
+      padding: 16px;
+      border-top: 5px solid;
+    }
+    .scen-card.buy { border-top-color: var(--green); background: var(--green-light); }
+    .scen-card.rent { border-top-color: var(--gold); background: var(--gold-light); }
+    .scen-card h3 { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
+    .scen-card.buy h3 { color: var(--green); }
+    .scen-card.rent h3 { color: var(--gold); }
+    .scen-detail { font-size: 0.78rem; color: var(--text-muted); }
+
+    /* Inputs */
+    .input-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .input-group { display: flex; flex-direction: column; gap: 3px; }
+    .input-group label { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); }
+    .input-group input, .input-group select {
+      padding: 7px 9px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 0.88rem; background: white; color: var(--text); outline: none; width: 100%;
+    }
+    .input-group input:focus, .input-group select:focus { border-color: var(--green); }
+    .input-group input[type="number"] { -moz-appearance: textfield; }
+    .input-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+    /* Cushion table */
+    .cushion-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .cushion-table th {
+      text-align: left; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;
+      color: var(--text-muted); padding: 7px 6px; border-bottom: 2px solid var(--border); background: #fafafa;
+    }
+    .cushion-table td { padding: 7px 6px; border-bottom: 1px solid #f0f0f0; }
+    .cushion-table tr:nth-child(even) td { background: #fafafa; }
+    .cushion-table tr.buy-row td { background: var(--green-light); }
+    .cushion-table tr.rent-row td { background: var(--gold-light); }
+    .cushion-table tr.section-head td { background: #eee; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .cushion-table tr.total-row td { font-weight: 800; border-top: 2px solid var(--border); }
+    .cushion-table tr.warning td { background: var(--red-light) !important; color: var(--red); font-weight: 700; }
+    .cushion-table tr.healthy td { color: var(--green); font-weight: 600; }
+    .cushion-table td:not(:first-child) { text-align: right; font-weight: 600; }
+
+    /* Insight */
+    .insight-box { background: var(--gold-light); border: 1px solid var(--gold); border-radius: 10px; padding: 14px; margin-bottom: 14px; }
+    .insight-box h3 { font-size: 0.8rem; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+    .insight-box p { font-size: 0.85rem; color: #5d4037; line-height: 1.7; }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .summary-item { background: var(--card); border-radius: var(--radius); padding: 14px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+    .summary-num { font-size: 1.3rem; font-weight: 800; }
+    .summary-item.green .summary-num { color: var(--green); }
+    .summary-item.gold .summary-num { color: var(--gold); }
+    .summary-item.red .summary-num { color: var(--red); }
+    .summary-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; margin-top: 3px; }
+
+    footer { text-align: center; padding: 20px 16px; font-size: 0.7rem; color: var(--text-muted); }
+
+    @media (max-width: 650px) {
+      .position-grid { grid-template-columns: 1fr; }
+      .scenario-grid { grid-template-columns: 1fr; }
+      .input-grid { grid-template-columns: 1fr 1fr; }
+      .summary-strip { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>💰 Cash Cushion Check — Can We Afford to Buy?</h1>
+  <p>Month-by-month: will you have enough savings after buying vs. renting?</p>
+</header>
+
+<div class="container">
+
+  <!-- Starting Position -->
+  <div class="card">
+    <div class="card-title">📍 Starting Position — January 2027</div>
+    <div class="position-grid">
+      <div class="pos-item">
+        <div class="pos-num" id="start-savings">$73,270</div>
+        <div class="pos-label">Combined Savings</div>
+      </div>
+      <div class="pos-item">
+        <div class="pos-num" id="monthly-expenses">$2,318</div>
+        <div class="pos-label">Monthly Expenses (no housing)</div>
+      </div>
+      <div class="pos-item">
+        <div class="pos-num" id="monthly-income">$7,635</div>
+        <div class="pos-label">Monthly Net Income</div>
+      </div>
+    </div>
+    <p style="font-size:0.72rem; color:var(--text-muted); margin-top:10px; text-align:center;">
+      Income: Brett $5,070/mo after 401k · Abbie $3,333/mo · Combined net: $7,635/mo<br>
+      Expenses: $2,318/mo base + $500/mo car payment = <strong>$2,818/mo</strong> (no housing cost yet)<br>
+      Monthly savings rate: ~<strong id="monthly-savings-rate">$4,817/mo</strong> · Emergency fund target: <strong id="ef-target">$13,908</strong> (6 months of expenses)
+    </p>
+  </div>
+
+  <!-- Scenario Overview -->
+  <div class="scenario-grid">
+    <div class="scen-card buy">
+      <h3>🏠 Buy Now — January 2027</h3>
+      <div class="scen-detail">Buy $300K house with 20% down. Move in January. No rental period.</div>
+    </div>
+    <div class="scen-card rent">
+      <h3>📦 Rent 6 Months, Then Buy</h3>
+      <div class="scen-detail">Rent Jan–Jun 2027 at $1,400/mo. Buy $300K house in July 2027.</div>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div class="card">
+    <div class="card-title">⚙️ Adjust the Numbers</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Starting Savings</label>
+        <input type="number" id="in-start-savings" value="73270" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Monthly Net Income</label>
+        <input type="number" id="in-income" value="7635" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Monthly Expenses (excl. housing)</label>
+        <input type="number" id="in-expenses" value="2818" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>House Price</label>
+        <input type="number" id="in-price" value="300000" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Down Payment %</label>
+        <input type="number" id="in-down-pct" value="20" min="3" max="50" step="1" oninput="calculate()"> %
+      </div>
+      <div class="input-group">
+        <label>Monthly Rent (if renting)</label>
+        <input type="number" id="in-rent" value="1400" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Monthly PITI (if buying)</label>
+        <input type="number" id="in-piti" value="2100" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Rent Period (months)</label>
+        <input type="number" id="in-rent-months" value="6" min="1" max="24" oninput="calculate()">
+      </div>
+      <div class="input-group">
+        <label>Emergency Fund Target</label>
+        <input type="number" id="in-ef-target" value="16908" oninput="calculate()">
+      </div>
+    </div>
+    <p style="font-size:0.7rem; color:var(--text-muted); margin-top:8px; font-style:italic;">
+      PITI = Principal + Interest + Taxes + Insurance (your $300K @ 6.5% / 20% down / 30yr ≈ $1,518 P&I + $583 tax + $100 ins + $100 maint = $2,301/mo)
+    </p>
+  </div>
+
+  <!-- Summary Strip -->
+  <div class="summary-strip">
+    <div class="summary-item green">
+      <div class="summary-num" id="sum-buy-after">—</div>
+      <div class="summary-label">Buy: Savings After Closing</div>
+    </div>
+    <div class="summary-item gold">
+      <div class="summary-num" id="sum-rent-after">—</div>
+      <div class="summary-label">Rent: Savings After 6 Mo</div>
+    </div>
+    <div class="summary-item" id="sum-winner-cell">
+      <div class="summary-num" id="sum-winner">—</div>
+      <div class="summary-label">More Cushion</div>
+    </div>
+  </div>
+
+  <!-- Month-by-Month Table -->
+  <div class="card">
+    <div class="card-title">📅 Month-by-Month Savings Comparison</div>
+    <div style="overflow-x:auto;">
+      <table class="cushion-table" id="cushion-table"></table>
+    </div>
+  </div>
+
+  <!-- Insight -->
+  <div class="insight-box">
+    <h3>💡 What This Means for You</h3>
+    <p id="insight-text">Enter your numbers to see the analysis.</p>
+  </div>
+
+</div>
+
+<footer>
+  Based on your Future Budget Calculator · Income, expenses, and savings from Year 1 of your model<br>
+  Soli Deo Gloria 🙏
+</footer>
+
+<script>
+  function fmt(n) {
+    if (isNaN(n) || n === null) return '—';
+    if (Math.abs(n) >= 1000000) return '$' + (n/1000000).toFixed(2) + 'M';
+    if (Math.abs(n) >= 100000) return '$' + Math.round(n).toLocaleString('en-US');
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function fmtMo(n) { return '$' + Math.round(n).toLocaleString('en-US') + '/mo'; }
+
+  function calculate() {
+    const savings = parseFloat(document.getElementById('in-start-savings').value) || 0;
+    const income = parseFloat(document.getElementById('in-income').value) || 0;
+    const expenses = parseFloat(document.getElementById('in-expenses').value) || 0;
+    const price = parseFloat(document.getElementById('in-price').value) || 300000;
+    const downPct = parseFloat(document.getElementById('in-down-pct').value) / 100;
+    const rent = parseFloat(document.getElementById('in-rent').value) || 1400;
+    const piti = parseFloat(document.getElementById('in-piti').value) || 2100;
+    const rentMonths = parseInt(document.getElementById('in-rent-months').value) || 6;
+    const efTarget = parseFloat(document.getElementById('in-ef-target').value) || 16908;
+
+    const downPayment = price * downPct;
+    const closingCosts = price * 0.02;
+    const cashAfterClosing = savings - downPayment - closingCosts;
+
+    const monthlySavings = income - expenses; // before housing
+    const months = rentMonths + 3; // rent months + 3 extra months post-buy
+
+    let table = `<thead>
+      <tr>
+        <th>Month</th>
+        <th>Scenario</th>
+        <th>Housing Cost</th>
+        <th>Monthly Savings</th>
+        <th>Total Savings</th>
+        <th>Cushion vs. EF Target</th>
+      </tr>
+    </thead><tbody>`;
+
+    let buyCushion = [];
+    let rentCushion = [];
+    let lowestBuySavings = Infinity;
+    let lowestRentSavings = Infinity;
+    let lowestBuyMonth = '';
+    let lowestRentMonth = '';
+
+    const months_list = [
+      'Jan 27', 'Feb 27', 'Mar 27', 'Apr 27', 'May 27', 'Jun 27',
+      'Jul 27', 'Aug 27', 'Sep 27'
+    ];
+
+    for (let m = 0; m <= months; m++) {
+      const label = months_list[m] || ('Month ' + (m+1));
+
+      // BUY SCENARIO: buy at month 0 (January)
+      const buyHousingCost = piti;
+      const buyMonthlySavings = monthlySavings - piti;
+      const buyTotal = cashAfterClosing + (buyMonthlySavings * m);
+      const buyCush = buyTotal - efTarget;
+
+      if (buyTotal < lowestBuySavings) { lowestBuySavings = buyTotal; lowestBuyMonth = label; }
+      buyCushion.push({ month: label, total: buyTotal, cushion: buyCush, housing: piti, monthly: buyMonthlySavings });
+
+      // RENT SCENARIO: rent for rentMonths, then buy
+      const isRentingPhase = m < rentMonths;
+      const rentHousingCost = isRentingPhase ? rent : piti;
+      const rentMonthlySavings = isRentingPhase
+        ? monthlySavings - rent
+        : monthlySavings - piti;
+      // They invest the down payment during the rental period
+      const invested = isRentingPhase ? downPayment * Math.pow(1.07, m/12) : downPayment * Math.pow(1.07, rentMonths/12);
+      const cashAfterClosingRent = savings - invested - closingCosts;
+      const rentTotal = cashAfterClosingRent + (rentMonthlySavings * m);
+      const rentCush = rentTotal - efTarget;
+
+      if (rentTotal < lowestRentSavings) { lowestRentSavings = rentTotal; lowestRentMonth = label; }
+      rentCushion.push({ month: label, total: rentTotal, cushion: rentCush, housing: rentHousingCost, monthly: rentMonthlySavings, invested: isRentingPhase });
+    }
+
+    // Build table rows — show key months
+    const showMonths = [0, 1, 2, rentMonths-1, rentMonths, rentMonths+1, rentMonths+2, months];
+    const uniqueMonths = [...new Set(showMonths)].sort((a,b) => a-b);
+
+    uniqueMonths.forEach(m => {
+      const b = buyCushion[m];
+      const r = rentCushion[m];
+      if (!b || !r) return;
+
+      const bClass = b.cushion < 0 ? 'warning' : (b.cushion > efTarget * 0.5 ? 'healthy' : '');
+      const rClass = r.cushion < 0 ? 'warning' : (r.cushion > efTarget * 0.5 ? 'healthy' : '');
+
+      const bRowClass = m === 0 ? 'buy-row' : '';
+      const rRowClass = m === rentMonths ? 'rent-row' : '';
+
+      table += `<tr class="section-head ${bRowClass}">
+        <td colspan="6">${b.month}</td>
+      </tr>`;
+      table += `<tr class="${bRowClass} ${bClass}">
+        <td></td><td style="color:var(--green);font-weight:700;">🏠 Buy Now</td>
+        <td>${fmtMo(b.housing)}</td>
+        <td>${fmtMo(b.monthly)}</td>
+        <td>${fmt(b.total)}</td>
+        <td style="color:${b.cushion >= 0 ? 'var(--green)' : 'var(--red)'};">${b.cushion >= 0 ? '+' : ''}${fmt(b.cushion)}</td>
+      </tr>`;
+      table += `<tr class="${rRowClass} ${rClass}">
+        <td></td><td style="color:var(--gold);font-weight:700;">📦 Rent ${rentMonths}mo</td>
+        <td>${fmtMo(r.housing)}</td>
+        <td>${fmtMo(r.monthly)}</td>
+        <td>${fmt(r.total)}</td>
+        <td style="color:${r.cushion >= 0 ? 'var(--green)' : 'var(--red)'};">${r.cushion >= 0 ? '+' : ''}${fmt(r.cushion)}</td>
+      </tr>`;
+    });
+
+    // Totals row
+    const finalBuy = buyCushion[months];
+    const finalRent = rentCushion[months];
+    table += `<tr class="total-row">
+      <td colspan="2">Year End (Month ${months+1})</td>
+      <td></td><td></td>
+      <td></td><td></td>
+    </tr>`;
+    table += `<tr style="background:var(--green-light);font-weight:800;">
+      <td></td><td style="color:var(--green);">🏠 Buy Total Savings</td>
+      <td></td><td></td>
+      <td>${fmt(finalBuy.total)}</td>
+      <td style="color:var(--green);">${finalBuy.cushion >= 0 ? '+' : ''}${fmt(finalBuy.cushion)} cushion</td>
+    </tr>`;
+    table += `<tr style="background:var(--gold-light);font-weight:800;">
+      <td></td><td style="color:var(--gold);">📦 Rent ${rentMonths}mo Total Savings</td>
+      <td></td><td></td>
+      <td>${fmt(finalRent.total)}</td>
+      <td style="color:var(--gold);">${finalRent.cushion >= 0 ? '+' : ''}${fmt(finalRent.cushion)} cushion</td>
+    </tr>`;
+
+    table += '</tbody>';
+    document.getElementById('cushion-table').innerHTML = table;
+
+    // Summary
+    document.getElementById('sum-buy-after').textContent = fmt(cashAfterClosing);
+    document.getElementById('sum-rent-after').textContent = fmt(rentCushion[rentMonths] ? rentCushion[rentMonths].total : savings);
+
+    const winner = cashAfterClosing > (rentCushion[rentMonths] ? rentCushion[rentMonths].total : 0);
+    document.getElementById('sum-winner').textContent = winner ? '🏠 Buy' : '📦 Rent';
+    const winnerCell = document.getElementById('sum-winner-cell');
+    winnerCell.className = 'summary-item ' + (winner ? 'green' : 'gold');
+
+    // Cushion check
+    const buyLow = lowestBuySavings;
+    const rentLow = lowestRentSavings;
+
+    let insight = '';
+    if (buyLow < 0) {
+      insight += `⚠️ <strong>Warning:</strong> If you buy now, your savings would dip to <strong>${fmt(buyLow)}</strong> at the lowest point (${lowestBuyMonth}) — that's below zero, meaning you'd be financing closing costs with debt. `;
+    } else if (buyLow < efTarget) {
+      insight += `⚠️ <strong>Caution:</strong> If you buy now, your savings would drop to <strong>${fmt(buyLow)}</strong> at the lowest point (${lowestBuyMonth}). Your emergency fund target is ${fmt(efTarget)}. You'd be <strong>${fmt(efTarget - buyLow)} below</strong> your safety net. `;
+    } else {
+      insight += `✅ <strong>You'd be fine.</strong> If you buy now, your savings never drops below <strong>${fmt(buyLow)}</strong> (${lowestBuyMonth}). That's <strong>${fmt(buyLow)} above</strong> your emergency fund target. `;
+    }
+
+    if (rentLow < 0) {
+      insight += `Renting is also tight — savings would dip to <strong>${fmt(rentLow)}</strong> at the lowest point (${lowestRentMonth}). `;
+    } else if (rentLow < efTarget) {
+      insight += `Renting for ${rentMonths} months, your lowest point is <strong>${fmt(rentLow)}</strong> (${lowestRentMonth}) — <strong>${fmt(efTarget - rentLow)} below</strong> your emergency fund target. `;
+    } else {
+      insight += `Renting for ${rentMonths} months: lowest point is <strong>${fmt(rentLow)}</strong> — ${rentLow > buyLow ? fmt(rentLow - buyLow) + ' more' : 'less'} cushion than buying. `;
+    }
+
+    const buyAdv = finalBuy.total - finalRent.total;
+    if (buyAdv > 0) {
+      insight += `<br><br>📊 <strong>Over ${months+1} months:</strong> Buying nets you <strong>${fmt(buyAdv)} more</strong> in savings than renting, because your mortgage builds equity while renting just costs money.`;
+    } else {
+      insight += `<br><br>📊 <strong>Over ${months+1} months:</strong> Renting nets you <strong>${fmt(-buyAdv)} more</strong> in savings — primarily because you avoid ${fmt(closingCosts)} in closing costs and the rent is cheaper than the mortgage.`;
+    }
+
+    document.getElementById('insight-text').innerHTML = insight;
+
+    // Update starting position display
+    document.getElementById('start-savings').textContent = fmt(savings);
+    document.getElementById('monthly-expenses').textContent = fmtMo(expenses);
+    document.getElementById('monthly-income').textContent = fmtMo(income);
+    document.getElementById('monthly-savings-rate').textContent = fmtMo(monthlySavings);
+    document.getElementById('ef-target').textContent = fmt(efTarget);
+  }
+
+  calculate();
+</script>
+
+</body>
+</html>
