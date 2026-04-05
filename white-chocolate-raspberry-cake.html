@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>White Chocolate & Raspberry Cookie Layer Cake</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+Pro:wght@400;600;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Source Sans Pro', Georgia, sans-serif;
+      font-size: 11pt;
+      color: #2c1810;
+      background: #fffdf9;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 48px;
+      line-height: 1.65;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26pt;
+      font-weight: 900;
+      text-align: center;
+      color: #2c1810;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-style: italic;
+      color: #7a5544;
+      font-size: 11pt;
+      margin-bottom: 6px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 2px solid #c8a97e;
+      margin: 20px 0;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 15pt;
+      font-weight: 700;
+      color: #5a2d1e;
+      margin: 28px 0 10px;
+      padding-bottom: 5px;
+      border-bottom: 1.5px solid #c8a97e;
+    }
+
+    .component-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 12pt;
+      font-weight: 700;
+      color: #7a3e2a;
+      margin: 18px 0 6px;
+    }
+
+    .component-subtitle {
+      font-size: 9pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #b8860b;
+      margin: 14px 0 8px;
+    }
+
+    .recipe-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 16px;
+      page-break-inside: avoid;
+    }
+
+    .recipe-table td {
+      padding: 3px 8px;
+      font-size: 10pt;
+      vertical-align: top;
+    }
+
+    .recipe-table td:first-child {
+      font-weight: 700;
+      width: 40%;
+      color: #3d1f14;
+    }
+
+    .recipe-table td:last-child {
+      color: #5a4030;
+    }
+
+    .method-list {
+      padding-left: 20px;
+      margin: 8px 0;
+    }
+
+    .method-list li {
+      margin-bottom: 6px;
+      font-size: 10pt;
+      color: #3d2015;
+    }
+
+    .method-list li strong {
+      color: #5a2d1e;
+    }
+
+    .step {
+      font-weight: 700;
+      color: #5a2d1e;
+    }
+
+    .assembly {
+      background: #fdf6ee;
+      border: 1px solid #e8d5c4;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 14px 0;
+      page-break-inside: avoid;
+    }
+
+    .assembly .step-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 11pt;
+      font-weight: 700;
+      color: #5a2d1e;
+      margin: 10px 0 4px;
+    }
+
+    .assembly .step-title:first-child {
+      margin-top: 0;
+    }
+
+    .assembly p {
+      font-size: 9.5pt;
+      color: #4a3020;
+      margin-bottom: 4px;
+    }
+
+    .tip-box {
+      background: #fff8f0;
+      border-left: 4px solid #b8860b;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 9.5pt;
+      color: #5a4030;
+    }
+
+    .tip-box strong {
+      color: #b8860b;
+      font-weight: 700;
+    }
+
+    .pro-tip {
+      background: #f0f7f0;
+      border-left: 4px solid #2e7d32;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 9.5pt;
+      color: #2e4a2e;
+    }
+
+    .pro-tip strong {
+      color: #2e7d32;
+      font-weight: 700;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 32px;
+      padding-top: 16px;
+      border-top: 1px solid #ddd;
+      font-size: 9pt;
+      color: #999;
+      font-style: italic;
+    }
+
+    .emoji { font-size: 14pt; }
+
+    @media print {
+      body { padding: 20px 30px; font-size: 10pt; }
+      h1 { font-size: 22pt; }
+      .section-title { page-break-after: avoid; }
+      .assembly { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>🍫 White Chocolate & Raspberry<br>Cookie Layer Cake</h1>
+<p class="subtitle">Assembled like tiramisu — no bake, chilled, layered</p>
+<hr class="divider">
+
+<!-- ==================== COMPONENT 1 ==================== -->
+<div class="component-subtitle">🍪 COMPONENT 1 — White Chocolate Cookie Layers</div>
+<div class="component-title">White Chocolate Cookie Layers</div>
+<p style="font-size:10pt; color:#5a4030; font-style:italic; margin-bottom:10px;">Buttery, crumbly, vanilla-forward with subtle white chocolate flavor — 3 layers</p>
+
+<table class="recipe-table">
+  <tr><td>All-purpose flour</td><td>2 cups (280g)</td></tr>
+  <tr><td>Baking soda</td><td>½ tsp</td></tr>
+  <tr><td>Fine salt</td><td>½ tsp</td></tr>
+  <tr><td>Unsalted butter, room temp</td><td>1 cup (226g)</td></tr>
+  <tr><td>Brown sugar, packed</td><td>¾ cup (150g)</td></tr>
+  <tr><td>Granulated sugar</td><td>½ cup (100g)</td></tr>
+  <tr><td>Large egg, room temp</td><td>1</td></tr>
+  <tr><td>Pure vanilla extract</td><td>2 tsp</td></tr>
+  <tr><td>White chocolate, melted and cooled</td><td>8 oz (226g)</td></tr>
+</table>
+
+<ol class="method-list">
+  <li>Preheat oven to <strong>350°F (175°C)</strong>. Line sheet pans with parchment.</li>
+  <li>Whisk flour, baking soda, and salt together. Set aside.</li>
+  <li>Cream butter and both sugars on medium-high for <strong>4–5 minutes</strong> until fluffy and pale.</li>
+  <li>Beat in egg and vanilla until combined.</li>
+  <li>Beat in melted white chocolate until smooth.</li>
+  <li>Gradually add flour mixture on low until just combined. <strong>Do not overmix.</strong></li>
+  <li>Divide dough into thirds. Wrap each in plastic. Refrigerate <strong>45 minutes</strong>.</li>
+  <li>Roll each portion between two sheets of parchment to <strong>¼-inch thick</strong>.</li>
+  <li>Bake <strong>10–12 minutes</strong> until edges are set but centers look slightly underdone. They firm up as they cool.</li>
+  <li>Cool completely on pan before assembling.</li>
+</ol>
+
+<div class="tip-box"><strong>Pro tip:</strong> For clean 8-inch rounds, roll and bake on a pizza stone. Cut circles with the base of an 8-inch springform pan while cookies are still warm.</div>
+
+<!-- ==================== COMPONENT 2 ==================== -->
+<div class="component-subtitle">🧈 COMPONENT 2 — White Chocolate Mascarpone Filling</div>
+
+<table class="recipe-table">
+  <tr><td>White chocolate, finely chopped</td><td>12 oz (340g)</td></tr>
+  <tr><td>Heavy cream</td><td>¾ cup (180ml)</td></tr>
+  <tr><td>Mascarpone cheese, room temp</td><td>16 oz (454g)</td></tr>
+  <tr><td>Powdered sugar, sifted</td><td>½ cup (65g)</td></tr>
+  <tr><td>Pure vanilla extract</td><td>2 tsp</td></tr>
+  <tr><td>Fine salt</td><td>¼ tsp</td></tr>
+  <tr><td>Raspberry coulis (optional — for color)</td><td>2 tbsp</td></tr>
+</table>
+
+<ol class="method-list">
+  <li>Place white chocolate in a heatproof bowl.</li>
+  <li>Heat cream until just simmering. Pour over chocolate. Let sit <strong>2 minutes</strong>.</li>
+  <li>Stir from center outward until completely smooth and glossy. Cool to room temperature (about <strong>30 minutes</strong>).</li>
+  <li>Beat mascarpone, powdered sugar, vanilla, and salt on medium speed until smooth and fluffy.</li>
+  <li>Fold in the cooled white chocolate ganache in <strong>two additions</strong>. Fold in coulis for color if using.</li>
+  <li>Refrigerate until firm enough to spread (about <strong>30 minutes</strong>).</li>
+</ol>
+
+<!-- ==================== COMPONENT 3 ==================== -->
+<div class="component-subtitle">🍓 COMPONENT 3 — Raspberry Coulis</div>
+
+<table class="recipe-table">
+  <tr><td>Fresh or frozen raspberries</td><td>12 oz (340g)</td></tr>
+  <tr><td>Granulated sugar</td><td>¼ cup (50g)</td></tr>
+  <tr><td>Fresh lemon juice</td><td>2 tbsp</td></tr>
+  <tr><td>Vanilla paste</td><td>½ tsp</td></tr>
+  <tr><td>Fine salt</td><td>Pinch</td></tr>
+</table>
+
+<ol class="method-list">
+  <li>Combine raspberries, sugar, and lemon juice in a saucepan over medium heat.</li>
+  <li>Stir and cook until raspberries break down and mixture slightly thickens, about <strong>8–10 minutes</strong>.</li>
+  <li>Strain through a fine-mesh sieve, pressing to extract all liquid. <strong>Discard seeds.</strong></li>
+  <li>Stir in vanilla paste and salt. Cool completely.</li>
+  <li>Should coat a spoon but still pour. If too thick, add 1 tbsp warm water. If too thin, cook 2 more minutes.</li>
+</ol>
+
+<!-- ==================== COMPONENT 4 ==================== -->
+<div class="component-subtitle">🍓 COMPONENT 4 — Fresh Raspberry Filling</div>
+
+<table class="recipe-table">
+  <tr><td>Fresh raspberries, picked over</td><td>3 cups (340g)</td></tr>
+  <tr><td>Raspberry coulis</td><td>2 tbsp</td></tr>
+  <tr><td>Fine salt</td><td>Pinch</td></tr>
+</table>
+
+<ol class="method-list">
+  <li>Toss gently with coulis and salt <strong>just before assembly</strong>. Do not prepare ahead.</li>
+</ol>
+
+<!-- ==================== COMPONENT 5 ==================== -->
+<div class="component-subtitle">🍫 COMPONENT 5 — White Chocolate Ganache Glaze</div>
+
+<table class="recipe-table">
+  <tr><td>White chocolate, finely chopped</td><td>10 oz (283g)</td></tr>
+  <tr><td>Heavy cream</td><td>¾ cup (180ml)</td></tr>
+  <tr><td>Unsalted butter, room temp</td><td>1½ tbsp</td></tr>
+  <tr><td>Vanilla extract</td><td>½ tsp</td></tr>
+  <tr><td>Fine salt</td><td>1 pinch</td></tr>
+</table>
+
+<ol class="method-list">
+  <li>Heat cream until just simmering. Pour over white chocolate.</li>
+  <li>Let sit <strong>2 minutes</strong>, then stir until perfectly smooth.</li>
+  <li>Beat in butter and vanilla until glossy. Cool until pourable but not runny (about <strong>15–20 minutes</strong> at room temperature).</li>
+</ol>
+
+<!-- ==================== ASSEMBLY ==================== -->
+<div class="section-title">🍽️ Assembly</div>
+
+<div class="tip-box"><strong>Tools needed:</strong> 8-inch springform pan · Acetate sheets or parchment strips · Offset spatula</div>
+
+<div class="assembly">
+  <div class="step-title">🍪 Step 1 — Cookie Layer 1</div>
+  <p>Place one white chocolate cookie round in the bottom of the springform pan. If it cracks, press pieces together — it will hold.</p>
+
+  <div class="step-title">🧈 Step 2 — Filling Layer 1</div>
+  <p>Spread <strong>half</strong> of the white chocolate mascarpone filling evenly over the cookie.</p>
+
+  <div class="step-title">🍓 Step 3 — Coulis Drizzle 1</div>
+  <p>Spoon <strong>half</strong> of the raspberry coulis in a loose spiral over the filling. Don't spread it — let it sit.</p>
+
+  <div class="step-title">🍓 Step 4 — Fresh Raspberries 1</div>
+  <p>Scatter <strong>half</strong> of the fresh raspberries over the coulis.</p>
+
+  <div class="step-title">🍪 Step 5 — Cookie Layer 2</div>
+  <p>Add the second cookie round. Press gently.</p>
+
+  <div class="step-title">🧈 Step 6 — Filling Layer 2</div>
+  <p>Spread the <strong>remaining</strong> filling evenly.</p>
+
+  <div class="step-title">🍓 Step 7 — Coulis Drizzle 2</div>
+  <p>Spoon the <strong>remaining</strong> coulis in a spiral.</p>
+
+  <div class="step-title">🍓 Step 8 — Fresh Raspberries 2</div>
+  <p>Scatter the <strong>remaining</strong> fresh raspberries.</p>
+
+  <div class="step-title">🍪 Step 9 — Cookie Layer 3 (Top)</div>
+  <p>Add the third cookie round. Press very gently.</p>
+
+  <div class="step-title">🍫 Step 10 — Ganache Glaze</div>
+  <p>Pour the white chocolate ganache over the top. Use an offset spatula to spread to the edges and let it drip down the sides naturally.</p>
+
+  <div class="step-title">🍓 Finishing Touches</div>
+  <p>Top with fresh raspberries, white chocolate curls, and a light dusting of freeze-dried raspberry powder (optional).</p>
+</div>
+
+<!-- ==================== SETTING ==================== -->
+<div class="section-title">🧊 Setting & Serving</div>
+
+<div class="assembly">
+  <div class="step-title">⏰ Chill</div>
+  <p>Cover with plastic wrap pressed directly onto the surface. Refrigerate <strong>minimum 6 hours, preferably overnight</strong>. This is what sets everything — the cookies soften slightly, the filling firms, and the layers fuse.</p>
+
+  <div class="step-title">🔪 Serve</div>
+  <p>Run a thin knife around the edge of the springform. Release. Wipe knife between each cut for clean slices. Bring to room temperature <strong>15 minutes</strong> before serving.</p>
+</div>
+
+<!-- ==================== PRO TIPS ==================== -->
+<div class="section-title">⭐ Pro Tips</div>
+
+<div class="pro-tip"><strong>Overnight is non-negotiable.</strong> This is a chilled-set cake. Slicing before it's set will make a mess. Plan ahead.</div>
+
+<div class="pro-tip"><strong>Room temperature mascarpone.</strong> Cold mascarpone will not fold smooth — it'll be lumpy. Take it out of the fridge 30 minutes before starting.</div>
+
+<div class="pro-tip"><strong>White chocolate quality matters.</strong> Use Valrhona Ivoire, Callebaut, or Guittard. Do not use white candy coating — it won't melt the same way.</div>
+
+<div class="pro-tip"><strong>The coulis must be completely cool</strong> before using, or it'll melt the filling.</div>
+
+<div class="pro-tip"><strong>If ganache sets too firm,</strong> warm the bottom of the bowl in warm water for 10 seconds and stir.</div>
+
+<!-- ==================== STORAGE ==================== -->
+<div class="section-title">📦 Storage</div>
+
+<p style="font-size:10pt; margin-bottom:4px;">Refrigerate up to <strong>4 days</strong>. Do not freeze — the cookie layers will lose their texture.</p>
+
+<div class="footer">
+  White Chocolate & Raspberry Cookie Layer Cake<br>
+  Soli Deo Gloria 🙏
+</div>
+
+</body>
+</html>
