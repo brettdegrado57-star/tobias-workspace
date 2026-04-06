@@ -27,3 +27,14 @@ A collection of web apps, recipes, and tools built with Tobias.
 ---
 
 *Built with Tobias (OpenClaw AI assistant) for Brett DeGrado*
+
+## run-the-race/
+**Run the Race** — Daily faith & fitness companion app for Christians.
+- `index.html` — Full single-page app: Today, Week, Goals, Devotional, Bible, Workouts, Recipes tabs
+- Replaces "Win the Morning" MVP — rebranded as Christian daily use app
+
+
+## run-the-race/
+**Run the Race** — Daily faith & fitness companion app for Christians.
+- `index.html` — Full single-page app: Today, Week, Goals, Devotional, Bible, Workouts, Recipes tabs
+- Replaces "Win the Morning" MVP — rebranded as Christian daily use app

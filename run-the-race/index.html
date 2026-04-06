@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Run the Race — Daily Faith & Fitness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1a3a5c;
+      --primary-light: #2a5a8c;
+      --primary-dark: #0f2840;
+      --accent: #c9a84c;
+      --accent-light: #e0c870;
+      --bg: #f9f6f1;
+      --card: #ffffff;
+      --text: #2c2c2c;
+      --muted: #7a7a7a;
+      --border: #e0d8cc;
+      --success: #4a7c59;
+      --danger: #c0392b;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    h1,h2,h3,h4 { font-family: 'Merriweather', serif; }
+
+    /* NAV */
+    nav { background: var(--primary); padding: 0.75rem 1.25rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .nav-logo { display: flex; align-items: center; gap: 0.5rem; color: #fff; text-decoration: none; }
+    .nav-logo-icon { font-size: 1.5rem; }
+    .nav-logo-text { font-family: 'Merriweather', serif; font-size: 1.1rem; font-weight: 700; }
+    .nav-links { display: flex; gap: 0.25rem; list-style: none; }
+    .nav-links button { background: none; border: none; color: rgba(255,255,255,0.8); font-size: 0.78rem; padding: 0.4rem 0.65rem; border-radius: 8px; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 500; transition: all 0.2s; }
+    .nav-links button:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .nav-links button.active { background: var(--accent); color: var(--primary-dark); }
+
+    /* PAGES */
+    .page { display: none; padding: 1rem 1rem 2rem; max-width: 680px; margin: 0 auto; }
+    .page.active { display: block; }
+
+    /* CARDS */
+    .card { background: var(--card); border-radius: var(--radius); padding: 1rem 1.25rem; box-shadow: var(--shadow); margin-bottom: 1rem; border: 1px solid var(--border); }
+    .card-title { font-size: 0.95rem; font-weight: 600; color: var(--primary-dark); margin-bottom: 0.75rem; font-family: 'Merriweather', serif; }
+
+    /* SECTION LABELS */
+    .section-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 700; margin: 1rem 0 0.5rem; }
+
+    /* TOP BANNER */
+    .daily-banner { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: #fff; border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.25rem; text-align: center; }
+    .daily-banner .greeting { font-family: 'Merriweather', serif; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .daily-banner .date-sub { font-size: 0.8rem; opacity: 0.8; }
+    .daily-banner .scripture-ref { font-family: 'Merriweather', serif; font-style: italic; font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.9; }
+
+    /* ROUTINE */
+    .routine-times { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+    .routine-times label { flex: 1; }
+    .routine-times span { font-size: 0.7rem; color: var(--muted); display: block; margin-bottom: 0.2rem; }
+    .routine-times input { width: 100%; padding: 0.5rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); }
+
+    /* ACTIVITY LIST */
+    .activity-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--accent); flex-shrink: 0; margin-top: 0.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .activity-check.done { background: var(--accent); }
+    .activity-check.done::after { content: '✓'; color: white; font-size: 0.75rem; font-weight: 700; }
+    .activity-info { flex: 1; }
+    .activity-name { font-size: 0.9rem; font-weight: 500; }
+    .activity-name.done { text-decoration: line-through; color: var(--muted); }
+    .activity-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+    .activity-note { font-size: 0.8rem; color: var(--text); margin-top: 0.35rem; background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 6px; font-style: italic; }
+
+    .activity-type-badge { font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: 600; }
+    .badge-spiritual { background: #e8d5f0; color: #6b2d8b; }
+    .badge-physical { background: #d5edde; color: #2d6b4a; }
+    .badge-habitat { background: #dbeafe; color: #1a4a8a; }
+
+    /* ADD ACTIVITY */
+    .add-activity { margin-top: 0.75rem; }
+    .add-activity select, .add-activity input, .add-activity textarea { width: 100%; padding: 0.6rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-family: 'Inter', sans-serif; margin-bottom: 0.5rem; background: var(--bg); }
+    .add-activity textarea { resize: vertical; min-height: 50px; }
+    .add-activity button { width: 100%; padding: 0.65rem; background: var(--primary); color: white; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif; }
+    .add-activity button:hover { background: var(--primary-light); }
+
+    /* PRESET ACTIVITIES */
+    .preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .preset-btn { padding: 0.6rem; border: 1.5px solid var(--border); border-radius: 8px; background: white; font-size: 0.8rem; font-weight: 500; cursor: pointer; text-align: left; transition: all 0.2s; }
+    .preset-btn:hover { border-color: var(--accent); background: #fffdf5; }
+    .preset-btn .preset-emoji { font-size: 1rem; display: block; margin-bottom: 0.1rem; }
+    .preset-btn .preset-label { font-size: 0.75rem; color: var(--muted); }
+    .preset-btn .preset-type { font-size: 0.65rem; font-weight: 700; margin-top: 0.15rem; }
+
+    /* GOALS */
+    .goal-item { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.85rem 0; border-bottom: 1px solid var(--border); }
+    .goal-item:last-child { border-bottom: none; }
+    .goal-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--accent); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: var(--accent); transition: all 0.2s; }
+    .goal-circle.done { background: var(--accent); color: white; }
+    .goal-info { flex: 1; }
+    .goal-info.done .goal-text { text-decoration: line-through; color: var(--muted); }
+    .goal-text { font-size: 0.9rem; font-weight: 500; }
+    .goal-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.15rem; }
+    .goal-progress { height: 4px; background: var(--border); border-radius: 2px; margin-top: 0.4rem; overflow: hidden; }
+    .goal-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+    .add-goal-row { display: flex; gap: 0.5rem; }
+    .add-goal-row input { flex: 1; padding: 0.6rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-family: 'Inter', sans-serif; background: var(--bg); }
+    .add-goal-row button { padding: 0.6rem 1rem; background: var(--success); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.85rem; white-space: nowrap; }
+
+    /* WEEKLY VIEW */
+    .week-nav { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .week-nav-btn { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 0.4rem 0.75rem; cursor: pointer; font-size: 0.85rem; }
+    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.4rem; }
+    .day-col { background: var(--card); border-radius: 10px; padding: 0.5rem 0.35rem; text-align: center; border: 1.5px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .day-col:hover { border-color: var(--accent); }
+    .day-col.active { border-color: var(--primary); background: #eef4fb; }
+    .day-col.has-completed { background: #f0f7f0; }
+    .day-name { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); font-weight: 600; }
+    .day-num { font-size: 1rem; font-weight: 700; color: var(--primary-dark); margin-top: 0.2rem; }
+    .day-col.today .day-num { color: var(--accent); }
+    .day-completion { font-size: 0.65rem; color: var(--success); margin-top: 0.15rem; }
+
+    /* DEVOTIONAL */
+    .dev-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
+    .dev-tab { flex: 1; padding: 0.6rem; border: 1.5px solid var(--border); border-radius: 8px; background: white; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .dev-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .scripture-card { background: linear-gradient(135deg, #f5f0e8, #faf6ef); border: 1px solid #e0d0b0; border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; text-align: center; }
+    .scripture-text { font-family: 'Merriweather', serif; font-size: 1.05rem; font-style: italic; color: var(--primary-dark); line-height: 1.7; }
+    .scripture-ref { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+    .dev-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .dev-cat-btn { padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 10px; background: white; cursor: pointer; text-align: center; transition: all 0.2s; }
+    .dev-cat-btn:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: var(--shadow); }
+    .dev-cat-btn .cat-emoji { font-size: 1.5rem; display: block; margin-bottom: 0.25rem; }
+    .dev-cat-btn .cat-name { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+    .dev-cat-btn .cat-count { font-size: 0.7rem; color: var(--muted); }
+    .dev-output { background: var(--card); border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); }
+    .dev-output h3 { font-family: 'Merriweather', serif; font-size: 1.1rem; color: var(--primary-dark); margin-bottom: 0.75rem; }
+    .dev-output .dev-reflection { font-size: 0.88rem; line-height: 1.75; color: var(--text); margin-bottom: 1rem; }
+    .dev-prayer { background: #f5f0e8; border-radius: 8px; padding: 0.85rem; font-size: 0.85rem; font-style: italic; color: var(--primary-dark); line-height: 1.6; margin-top: 0.75rem; }
+    .loading-spinner { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.85rem; }
+    .loading-spinner::after { content: '...'; animation: dots 1.5s infinite; }
+    @keyframes dots { 0%{content:'.'} 33%{content:'..'} 66%{content:'...'}}
+
+    /* BIBLE */
+    .bible-lookup-row { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .bible-lookup-row input { flex: 1; padding: 0.7rem; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: var(--bg); }
+    .bible-lookup-row button { padding: 0.7rem 1rem; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; }
+    .bible-result { background: var(--card); border-radius: var(--radius); padding: 1.25rem; border: 1px solid var(--border); }
+    .bible-result .verse-text { font-family: 'Merriweather', serif; font-size: 1rem; line-height: 1.85; color: var(--text); margin-bottom: 0.75rem; }
+    .bible-result .verse-ref { font-size: 0.8rem; color: var(--muted); text-align: right; }
+    .bible-daily-card { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; border-radius: var(--radius); padding: 1.5rem; text-align: center; margin-bottom: 1rem; }
+    .bible-daily-card .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+    .bible-daily-card .ref { font-family: 'Merriweather', serif; font-size: 1.4rem; margin: 0.5rem 0; }
+    .bible-daily-card .verse-preview { font-family: 'Merriweather', serif; font-style: italic; font-size: 0.85rem; opacity: 0.85; line-height: 1.6; }
+
+    /* WORKOUTS */
+    .workout-day-tabs { display: flex; gap: 0.35rem; overflow-x: auto; padding-bottom: 0.5rem; }
+    .wtab { padding: 0.5rem 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; background: white; font-size: 0.78rem; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+    .wtab.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .workout-card { background: var(--card); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.75rem; border: 1px solid var(--border); }
+    .workout-card h4 { font-size: 0.9rem; color: var(--primary-dark); margin-bottom: 0.6rem; font-family: 'Merriweather', serif; }
+    .workout-exercise { display: flex; justify-content: space-between; padding: 0.4rem 0; font-size: 0.85rem; border-bottom: 1px solid var(--border); }
+    .workout-exercise:last-child { border-bottom: none; }
+    .workout-sets { color: var(--accent); font-weight: 600; font-size: 0.8rem; }
+    .cond-it { background: #fef3c7; color: #92400e; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 600; }
+
+    /* RECIPES */
+    .recipe-card { background: var(--card); border-radius: var(--radius); padding: 1rem; margin-bottom: 0.75rem; border: 1px solid var(--border); cursor: pointer; transition: all 0.2s; }
+    .recipe-card:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+    .recipe-card h4 { font-size: 0.9rem; color: var(--primary-dark); font-family: 'Merriweather', serif; margin-bottom: 0.3rem; }
+    .recipe-card p { font-size: 0.78rem; color: var(--muted); }
+
+    /* LANDING */
+    .landing-hero { background: linear-gradient(160deg, var(--primary-dark) 0%, var(--primary) 60%, #2a6a9e 100%); color: white; min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1.5rem; }
+    .landing-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; margin-bottom: 1rem; }
+    .landing-title { font-family: 'Merriweather', serif; font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; }
+    .landing-subtitle { font-size: 1.05rem; opacity: 0.85; max-width: 480px; line-height: 1.6; margin-bottom: 2rem; }
+    .landing-cta { display: inline-block; background: var(--accent); color: var(--primary-dark); padding: 0.85rem 2rem; border-radius: 30px; font-weight: 700; font-size: 1rem; text-decoration: none; }
+    .landing-verse { font-family: 'Merriweather', serif; font-style: italic; font-size: 0.85rem; margin-top: 2rem; opacity: 0.7; }
+    .landing-features { padding: 3rem 1.5rem; max-width: 640px; margin: 0 auto; }
+    .landing-features h2 { font-family: 'Merriweather', serif; font-size: 1.5rem; text-align: center; margin-bottom: 2rem; color: var(--primary-dark); }
+    .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .feature-item { background: var(--card); border-radius: var(--radius); padding: 1.25rem; text-align: center; border: 1px solid var(--border); }
+    .feature-item .feat-emoji { font-size: 2rem; margin-bottom: 0.5rem; }
+    .feature-item h3 { font-size: 0.9rem; margin-bottom: 0.3rem; color: var(--primary-dark); font-family: 'Merriweather', serif; }
+    .feature-item p { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .landing-scripture { background: #f5f0e8; padding: 2.5rem 1.5rem; text-align: center; }
+    .landing-scripture blockquote { font-family: 'Merriweather', serif; font-size: 1.2rem; font-style: italic; color: var(--primary-dark); max-width: 500px; margin: 0 auto 0.75rem; line-height: 1.7; }
+    .landing-scripture cite { font-size: 0.8rem; color: var(--muted); }
+
+    /* LANDING BANNER IN APP */
+    .app-banner { background: var(--primary); color: white; padding: 0.6rem 1rem; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; }
+    .app-banner-text { opacity: 0.9; }
+    .app-banner-link { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+    /* FOOTER */
+    footer { text-align: center; padding: 1.5rem; font-size: 0.75rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 1rem; }
+
+    /* HELPER */
+    .text-center { text-align: center; }
+    .mt { margin-top: 0.75rem; }
+    .muted { color: var(--muted); font-size: 0.8rem; }
+    .emoji { font-size: 1.2rem; }
+  </style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav id="mainNav" style="display:none;">
+  <a href="#" class="nav-logo" onclick="showPage('daily')">
+    <span class="nav-logo-icon">🏃</span>
+    <span class="nav-logo-text">Run the Race</span>
+  </a>
+  <ul class="nav-links">
+    <button class="active" onclick="showPage('daily')" data-page="daily">Today</button>
+    <button onclick="showPage('weekly')" data-page="weekly">Week</button>
+    <button onclick="showPage('goals')" data-page="goals">Goals</button>
+    <button onclick="showPage('devotional')" data-page="devotional">Devotional</button>
+    <button onclick="showPage('bible')" data-page="bible">Bible</button>
+    <button onclick="showPage('workouts')" data-page="workouts">Workouts</button>
+    <button onclick="showPage('recipes')" data-page="recipes">Recipes</button>
+  </ul>
+</nav>
+
+<!-- ============ LANDING PAGE ============ -->
+<div id="page-landing" class="page active">
+  <div class="landing-hero">
+    <div class="landing-eyebrow">Daily Faith & Fitness</div>
+    <h1 class="landing-title">Run the Race<br>Set Before You</h1>
+    <p class="landing-subtitle">A daily companion for Christians who want to grow spiritually and physically. Track your routine, study God's Word, and pursue physical goals — all in one place.</p>
+    <a href="#" class="landing-cta" onclick="openApp(); return false;">Start Today →</a>
+    <div class="landing-verse">"Let us run with endurance the race that is set before us" — Hebrews 12:1</div>
+  </div>
+
+  <div class="landing-features">
+    <h2>Everything You Need</h2>
+    <div class="feature-grid">
+      <div class="feature-item">
+        <div class="feat-emoji">📖</div>
+        <h3>Bible Reading</h3>
+        <p>Look up any verse, get daily scripture, and study God's Word</p>
+      </div>
+      <div class="feature-item">
+        <div class="feat-emoji">🙏</div>
+        <h3>Daily Devotional</h3>
+        <p>Guided devotionals on faith, hope, and daily living</p>
+      </div>
+      <div class="feature-item">
+        <div class="feat-emoji">🏋️</div>
+        <h3>Workout Tracker</h3>
+        <p>Track your workouts and physical goals throughout the week</p>
+      </div>
+      <div class="feature-item">
+        <div class="feat-emoji">🎯</div>
+        <h3>Goal Setting</h3>
+        <p>Set spiritual and physical goals and track your progress</p>
+      </div>
+      <div class="feature-item">
+        <div class="feat-emoji">📝</div>
+        <h3>Daily Routine</h3>
+        <p>Build a morning routine anchored in prayer and scripture</p>
+      </div>
+      <div class="feature-item">
+        <div class="feat-emoji">🍽️</div>
+        <h3>Healthy Recipes</h3>
+        <p>Clean eating recipes that fuel your body for the race</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="landing-scripture">
+    <blockquote>"But they who wait for the Lord shall renew their strength; they shall mount up with wings like eagles; they shall run and not be weary; they shall walk and not faint."</blockquote>
+    <cite>Isaiah 40:31</cite>
+  </div>
+
+  <footer>
+    <p>Run the Race — Built for Christians pursuing spiritual and physical growth</p>
+    <p style="margin-top:0.3rem;">Soli Deo Gloria</p>
+  </footer>
+</div>
+
+<!-- ============ DAILY PAGE ============ -->
+<div id="page-daily" class="page">
+  <div class="daily-banner">
+    <div class="greeting" id="dailyGreeting">Good Morning</div>
+    <div class="date-sub" id="dailyDate"></div>
+    <div class="scripture-ref" id="dailyScripture"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⏰ My Morning Block</div>
+    <div class="routine-times">
+      <label><span>Wake up</span><input type="time" id="wakeTime" value="06:30" onchange="saveSettings()"></label>
+      <label><span>Start</span><input type="time" id="routineStart" value="06:45" onchange="saveSettings()"></label>
+      <label><span>End</span><input type="time" id="routineEnd" value="08:45" onchange="saveSettings()"></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Today's Activities</div>
+    <div id="activitiesList"></div>
+    <div class="add-activity">
+      <div class="preset-grid" id="presetGrid"></div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.5rem;">Or add your own:</div>
+      <select id="newActivityType">
+        <option value="spiritual">Spiritual</option>
+        <option value="physical">Physical</option>
+        <option value="habit">Habit</option>
+      </select>
+      <input type="text" id="newActivityName" placeholder="Activity name...">
+      <input type="number" id="newActivityMinutes" placeholder="Minutes" min="1" max="300">
+      <textarea id="newActivityNotes" placeholder="Notes or reflection (optional)..." rows="2"></textarea>
+      <button onclick="addActivity()">Add Activity</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💭 Today's Devotional</div>
+    <div class="scripture-card" id="dailyDevBanner">
+      <div class="scripture-text" id="dailyDevVerse"></div>
+      <div class="scripture-ref" id="dailyDevRef"></div>
+    </div>
+    <button class="dev-tab" onclick="showPage('devotional')" style="width:100%;background:var(--primary);color:white;border-color:var(--primary);padding:0.7rem;">Read Devotional →</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🏋️ Today's Workout</div>
+    <div id="todayWorkoutPreview"></div>
+    <button class="dev-tab" onclick="showPage('workouts')" style="width:100%;background:var(--primary);color:white;border-color:var(--primary);padding:0.7rem;">View Workouts →</button>
+  </div>
+</div>
+
+<!-- ============ WEEKLY PAGE ============ -->
+<div id="page-weekly" class="page">
+  <div class="card" style="text-align:center;">
+    <div class="card-title" style="text-align:left;">📅 This Week</div>
+    <div class="week-nav">
+      <button class="week-nav-btn" onclick="changeWeek(-1)">← Prev</button>
+      <span id="weekLabel" style="flex:1;font-weight:600;font-size:0.9rem;"></span>
+      <button class="week-nav-btn" onclick="changeWeek(1)">Next →</button>
+    </div>
+    <div class="week-grid" id="weekGrid"></div>
+  </div>
+  <div id="dayDetail" class="card" style="display:none;">
+    <div class="card-title" id="dayDetailTitle"></div>
+    <div id="dayActivitiesList"></div>
+  </div>
+  <div id="weekSummary" class="card" style="display:none;"></div>
+</div>
+
+<!-- ============ GOALS PAGE ============ -->
+<div id="page-goals" class="page">
+  <div class="card">
+    <div class="card-title">🎯 My Goals</div>
+    <div id="goalsList"></div>
+    <div class="add-goal-row mt">
+      <input type="text" id="newGoalText" placeholder="New goal...">
+      <button onclick="addGoal()">Add</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Progress</div>
+    <div id="goalsProgress"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🙏 Spiritual Disciplines</div>
+    <div class="section-label">Track your habits</div>
+    <div id="spiritualHabits"></div>
+    <div class="add-goal-row mt">
+      <input type="text" id="newHabitText" placeholder="New habit (e.g. Read 10 verses)...">
+      <button onclick="addHabit()" style="background:var(--primary);">Add</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DEVOTIONAL PAGE ============ -->
+<div id="page-devotional" class="page">
+  <div class="card">
+    <div class="card-title">🙏 Daily Devotional</div>
+    <div class="scripture-card" id="devScriptureCard">
+      <div class="scripture-text" id="devScriptureText"></div>
+      <div class="scripture-ref" id="devScriptureRef"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Browse by Topic</div>
+    <div class="dev-categories" id="devCategories"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💬 Ask a Question</div>
+    <textarea id="freeformInput" placeholder="Ask for a devotional... e.g. 'Peace in difficult times' or 'Walking by faith'" rows="2" style="width:100%;padding:0.7rem;border:1.5px solid var(--border);border-radius:8px;font-family:Inter,sans-serif;font-size:0.85rem;resize:none;margin-bottom:0.5rem;"></textarea>
+    <button style="width:100%;padding:0.7rem;background:var(--primary);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;" onclick="generateDevotional()">Get Devotional →</button>
+  </div>
+
+  <div id="devLoadingState" class="loading-spinner" style="display:none;">Loading devotional</div>
+  <div id="devotionalOutput" class="card" style="display:none;"></div>
+</div>
+
+<!-- ============ BIBLE PAGE ============ -->
+<div id="page-bible" class="page">
+  <div class="card">
+    <div class="card-title">📖 Bible Lookup</div>
+    <div class="bible-lookup-row">
+      <input type="text" id="bibleLookupInput" placeholder="John 3:16, Romans 12:2, Psalm 23...">
+      <button onclick="lookupVerse()">Search</button>
+    </div>
+    <div id="bibleLookupResult"></div>
+  </div>
+
+  <div class="card">
+    <div class="bible-daily-card" id="bibleDailyCard">
+      <div class="label">VERSE OF THE DAY</div>
+      <div class="ref" id="bibleDailyRef"></div>
+      <div class="verse-preview" id="bibleDailyText"></div>
+    </div>
+    <button class="dev-tab" onclick="showPage('devotional')" style="width:100%;background:var(--primary);color:white;border-color:var(--primary);padding:0.7rem;">Study This Verse →</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">✝️ Core Verses</div>
+    <div id="coreVersesList"></div>
+  </div>
+</div>
+
+<!-- ============ WORKOUTS PAGE ============ -->
+<div id="page-workouts" class="page">
+  <div class="card" style="text-align:center;">
+    <div class="card-title" style="text-align:left;">🏋️ Workout Program</div>
+    <div class="workout-day-tabs" id="workoutDayTabs"></div>
+    <div id="workoutContent"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📅 Weekly Log</div>
+    <div id="workoutLog"></div>
+  </div>
+</div>
+
+<!-- ============ RECIPES PAGE ============ -->
+<div id="page-recipes" class="page">
+  <div class="card">
+    <div class="card-title">🍽️ Healthy Recipes</div>
+    <div id="recipeList"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  daily: {
+    activities: [],
+    wakeTime: '06:30',
+    routineStart: '06:45',
+    routineEnd: '08:45'
+  },
+  weekly: {
+    days: {}
+  },
+  goals: {
+    items: [],
+    habits: []
+  },
+  workouts: {
+    log: []
+  },
+  appOpen: false
+};
+
+// ============================================================
+// PRESET DATA
+// ============================================================
+const PRESET_ACTIVITIES = [
+  { emoji: '🙏', name: 'Prayer', type: 'spiritual', min: 15 },
+  { emoji: '📖', name: 'Bible Reading', type: 'spiritual', min: 20 },
+  { emoji: '📝', name: 'Journal', type: 'spiritual', min: 10 },
+  { emoji: '🎯', name: 'Devotional', type: 'spiritual', min: 15 },
+  { emoji: '🏃', name: 'Run/C cardio', type: 'physical', min: 30 },
+  { emoji: '🏋️', name: 'Lift Weights', type: 'physical', min: 45 },
+  { emoji: '🚶', name: 'Walk', type: 'physical', min: 20 },
+  { emoji: '🧘', name: 'Stretch / Yoga', type: 'physical', min: 15 },
+  { emoji: '💧', name: 'Drink Water', type: 'habit', min: 2 },
+  { emoji: '🥗', name: 'Eat Clean', type: 'habit', min: 0 },
+  { emoji: '😴', name: 'Sleep by 10pm', type: 'habit', min: 0 },
+  { emoji: '📵', name: 'No Phone First Hour', type: 'habit', min: 60 },
+];
+
+const PRESET_GOALS = [
+  { text: 'Read through the New Testament in 90 days', sub: 'Currently on day 1' },
+  { text: 'Run a half marathon (October)', sub: 'Training plan: Week 1' },
+  { text: 'Pray for 30 minutes daily', sub: 'Streak: 0 days' },
+  { text: 'Do not miss a workout week', sub: 'This week: 0/5' },
+];
+
+const SPIRITUAL_HABITS = [
+  { name: 'Morning Prayer', emoji: '🙏' },
+  { name: 'Daily Bible Reading', emoji: '📖' },
+  { name: 'Evening Gratitude', emoji: '💬' },
+  { name: 'Weekly Church', emoji: '⛪' },
+  { name: 'Bible Study', emoji: '📚' },
+  { name: 'Scripture Memorization', emoji: '🧠' },
+];
+
+const DAILY_SCRIPTURES = [
+  { ref: 'Isaiah 40:31', text: 'But they who wait for the Lord shall renew their strength...' },
+  { ref: 'Philippians 4:13', text: 'I can do all things through Christ who strengthens me.' },
+  { ref: 'Psalm 118:24', text: 'This is the day that the Lord has made; let us rejoice and be glad in it.' },
+  { ref: 'James 1:22', text: 'Be doers of the word, and not hearers only.' },
+  { ref: 'Proverbs 3:5-6', text: 'Trust in the Lord with all your heart and lean not on your own understanding...' },
+  { ref: 'Romans 8:28', text: 'We know that all things work together for good to those who love God.' },
+  { ref: 'Matthew 6:33', text: 'Seek first the kingdom of God and his righteousness, and all these things will be added to you.' },
+  { ref: 'Psalm 23:1', text: 'The Lord is my shepherd; I shall not want.' },
+];
+
+const DEV_CATEGORIES = [
+  { emoji: '🙏', name: 'Prayer', count: 8 },
+  { emoji: '📖', name: 'Faith', count: 12 },
+  { emoji: '💼', name: 'Work', count: 6 },
+  { emoji: '💪', name: 'Perseverance', count: 7 },
+  { emoji: '❤️', name: 'Love', count: 9 },
+  { emoji: '🌿', name: 'Peace', count: 8 },
+  { emoji: '🎯', name: 'Purpose', count: 6 },
+  { emoji: '🔥', name: 'Holiness', count: 5 },
+];
+
+const CORE_VERSES = [
+  'John 3:16', 'Romans 3:23', 'Romans 6:23', 'Romans 10:9',
+  'Romans 12:2', 'Ephesians 2:8-9', 'Philippians 1:6', 'Philippians 4:13',
+  'Colossians 3:23', '1 Peter 2:9', '1 John 4:19', 'Isaiah 40:31',
+  'Psalm 23:1', 'Proverbs 3:5', 'Matthew 11:28', 'James 1:22'
+];
+
+const WORKOUT_DAYS = [
+  'Push A', 'Pull A', 'Legs A', 'Rest',
+  'Push B', 'Pull B', 'Rest'
+];
+
+const WORKOUTS = {
+  'Push A': [
+    { name: 'Bench Press', sets: '5×5' },
+    { name: 'Overhead Press', sets: '4×8' },
+    { name: 'Incline DB Press', sets: '3×10' },
+    { name: 'Lateral Raises', sets: '3×12' },
+    { name: 'Tricep Pushdowns', sets: '3×12' },
+    { name: 'Face Pulls', sets: '3×15' },
+  ],
+  'Pull A': [
+    { name: 'Deadlift', sets: '5×5' },
+    { name: 'BB Rows', sets: '4×8' },
+    { name: 'Pull-Ups', sets: '4×8' },
+    { name: 'Face Pulls', sets: '3×15' },
+    { name: 'BB Curls', sets: '3×12' },
+    { name: 'Hammer Curls', sets: '3×12' },
+  ],
+  'Legs A': [
+    { name: 'Squats', sets: '5×5' },
+    { name: 'Romanian Deadlift', sets: '4×8' },
+    { name: 'Leg Press', sets: '3×12' },
+    { name: 'Leg Curls', sets: '3×12' },
+    { name: 'Calf Raises', sets: '4×15' },
+  ],
+  'Rest': [
+    { name: 'Active Recovery: Walk, Stretch, or Rest', sets: '' },
+  ],
+  'Push B': [
+    { name: 'OHP', sets: '5×5' },
+    { name: 'Bench Press', sets: '4×8' },
+    { name: 'Dips', sets: '3×10' },
+    { name: 'DB Shoulder Press', sets: '3×10' },
+    { name: 'Lateral Raises', sets: '3×12' },
+    { name: 'Overhead Tricep Extension', sets: '3×12' },
+  ],
+  'Pull B': [
+    { name: 'Sumo Deadlift', sets: '5×5' },
+    { name: 'BB Rows', sets: '4×8' },
+    { name: 'Cable Rows', sets: '3×12' },
+    { name: 'Rear Delt Flyes', sets: '3×15' },
+    { name: 'BB Curls', sets: '3×12' },
+    { name: 'Grip Crushes', sets: '3×20' },
+  ],
+  'Legs B': [
+    { name: 'Front Squat', sets: '4×8' },
+    { name: 'Bulgarian Split Squats', sets: '3×10' },
+    { name: 'Leg Extensions', sets: '3×12' },
+    { name: 'Leg Curls', sets: '3×12' },
+    { name: 'Standing Calf Raise', sets: '4×12' },
+  ],
+};
+
+const COND_WODS = [
+  'Fran: 21-15-9 Thrusters + Pull-ups',
+  'Grace: 30 Clean & Jerks (135/95)',
+  'Cindy: 20min AMRAP 5 Pull-ups / 10 Push-ups / 15 Squats',
+  'Helen: 3 rounds 400m Run / 21 KB Swings / 12 Pull-ups',
+  'AMRAP 12: 5 Thrusters / 10 Pull-ups / 15 Squats / 200m Run',
+];
+
+const RECIPES = [
+  { name: 'Grilled Chicken + Quinoa Bowl', desc: 'High protein post-workout meal with roasted veggies', tags: ['High Protein', 'Meal Prep'] },
+  { name: 'Greek Yogurt Parfait', desc: 'Greek yogurt, berries, honey, and granola', tags: ['Breakfast', 'Quick'] },
+  { name: 'Salmon + Sweet Potato', desc: 'Omega-3 rich dinner with micronutrient-dense carbs', tags: ['Dinner', 'Anti-inflammatory'] },
+  { name: 'Overnight Oats', desc: 'Rolled oats, chia seeds, almond milk, banana', tags: ['Breakfast', 'Meal Prep'] },
+  { name: 'Turkey + Avocado Wrap', desc: 'Lean protein, healthy fats, whole grain tortilla', tags: ['Lunch', 'Quick'] },
+  { name: 'White Choc Raspberry Tiramisu', desc: 'The dessert you\'re planning — just enjoy it in moderation!', tags: ['Dessert', 'Special Occasion'] },
+];
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  loadState();
+  renderDaily();
+  renderWeekly();
+  renderGoals();
+  renderDevotional();
+  renderBible();
+  renderWorkouts();
+  renderRecipes();
+  scheduleDailyRefresh();
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (name === 'daily') name = 'today';
+  const btn = document.querySelector(`.nav-links button[data-page="${name}"]`);
+  if (btn) btn.classList.add('active');
+}
+
+function openApp() {
+  state.appOpen = true;
+  saveState();
+  document.getElementById('page-landing').classList.remove('active');
+  document.getElementById('mainNav').style.display = 'flex';
+  showPage('daily');
+}
+
+// ============================================================
+// DAILY
+// ============================================================
+function renderDaily() {
+  const now = new Date();
+  const hour = now.getHours();
+  let greeting = 'Good Morning';
+  if (hour >= 12 && hour < 17) greeting = 'Good Afternoon';
+  else if (hour >= 17) greeting = 'Good Evening';
+
+  document.getElementById('dailyGreeting').textContent = greeting;
+  document.getElementById('dailyDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+
+  // Scripture of the day
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+  const scripture = DAILY_SCRIPTURES[dayOfYear % DAILY_SCRIPTURES.length];
+  document.getElementById('dailyScripture').textContent = `"${scripture.text}" — ${scripture.ref}`;
+  document.getElementById('dailyDevVerse').textContent = `"${scripture.text}"`;
+  document.getElementById('dailyDevRef').textContent = `— ${scripture.ref}`;
+  document.getElementById('devScriptureText').textContent = `"${scripture.text}"`;
+  document.getElementById('devScriptureRef').textContent = `— ${scripture.ref}`;
+
+  // Today workout preview
+  const todayWorkoutDay = WORKOUT_DAYS[(dayOfYear - 1) % 7];
+  const wout = WORKOUTS[todayWorkoutDay];
+  const preview = document.getElementById('todayWorkoutPreview');
+  if (wout && wout[0].sets) {
+    preview.innerHTML = `<div style="font-size:0.85rem;font-weight:600;color:var(--primary-dark);margin-bottom:0.5rem;">${todayWorkoutDay}</div>` +
+      wout.slice(0, 3).map(e => `<div style="font-size:0.82rem;padding:0.2rem 0;">${e.name} <span style="color:var(--accent);font-weight:600;">${e.sets}</span></div>`).join('');
+  } else {
+    preview.innerHTML = `<div style="font-size:0.85rem;color:var(--muted);">Rest day — recover well! 🙏</div>`;
+  }
+
+  renderActivities();
+  renderPresetGrid();
+}
+
+function renderPresetGrid() {
+  const grid = document.getElementById('presetGrid');
+  grid.innerHTML = PRESET_ACTIVITIES.slice(0, 6).map((a, i) =>
+    `<button class="preset-btn" onclick="quickAdd('${a.name}', '${a.type}', ${a.min})">
+      <span class="preset-emoji">${a.emoji}</span>
+      <span class="preset-label">${a.name}</span>
+      <span class="preset-type badge-${a.type === 'spiritual' ? 'spiritual' : a.type === 'physical' ? 'physical' : 'habitat'}">${a.min > 0 ? a.min+'min' : 'habit'}</span>
+    </button>`
+  ).join('');
+}
+
+function quickAdd(name, type, minutes) {
+  addActivityNamed(name, type, minutes, '');
+}
+
+function addActivityNamed(name, type, minutes, notes) {
+  const today = getTodayKey();
+  const id = Date.now();
+  const activity = { id, name, type, minutes: minutes || 0, notes, done: false, time: new Date().toISOString() };
+  state.daily.activities.push(activity);
+  saveState();
+  renderActivities();
+}
+
+function addActivity() {
+  const type = document.getElementById('newActivityType').value;
+  const name = document.getElementById('newActivityName').value.trim();
+  const min = parseInt(document.getElementById('newActivityMinutes').value) || 0;
+  const notes = document.getElementById('newActivityNotes').value.trim();
+  if (!name) return;
+  addActivityNamed(name, type, min, notes);
+  document.getElementById('newActivityName').value = '';
+  document.getElementById('newActivityMinutes').value = '';
+  document.getElementById('newActivityNotes').value = '';
+}
+
+function toggleActivity(id) {
+  const a = state.daily.activities.find(x => x.id === id);
+  if (a) { a.done = !a.done; saveState(); renderActivities(); }
+}
+
+function deleteActivity(id) {
+  state.daily.activities = state.daily.activities.filter(x => x.id !== id);
+  saveState();
+  renderActivities();
+}
+
+function renderActivities() {
+  const list = document.getElementById('activitiesList');
+  const acts = state.daily.activities.filter(a => {
+    const aDate = new Date(a.time).toDateString();
+    return aDate === new Date().toDateString();
+  });
+
+  if (acts.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:1rem;color:var(--muted);font-size:0.85rem;">No activities yet. Add one above or tap a preset!</div>';
+    return;
+  }
+
+  list.innerHTML = acts.map(a => `
+    <div class="activity-item">
+      <div class="activity-check ${a.done ? 'done' : ''}" onclick="toggleActivity(${a.id})"></div>
+      <div class="activity-info">
+        <div class="activity-name ${a.done ? 'done' : ''}">${a.name} ${a.min > 0 ? `<span style="color:var(--muted);font-size:0.75rem;">(${a.min}min)</span>` : ''}</div>
+        <span class="activity-type-badge badge-${a.type === 'spiritual' ? 'spiritual' : a.type === 'physical' ? 'physical' : 'habitat'}">${a.type}</span>
+        ${a.notes ? `<div class="activity-note">${a.notes}</div>` : ''}
+      </div>
+      <button onclick="deleteActivity(${a.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:0.9rem;padding:0.2rem;">✕</button>
+    </div>
+  `).join('');
+}
+
+function scheduleDailyRefresh() {
+  setInterval(() => {
+    if (state.appOpen) renderDaily();
+  }, 60000);
+}
+
+// ============================================================
+// WEEKLY
+// ============================================================
+let currentWeekOffset = 0;
+
+function getWeekDates(offset) {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1) + offset * 7);
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    days.push(d);
+  }
+  return days;
+}
+
+function renderWeekly() {
+  const days = getWeekDates(currentWeekOffset);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const startOfWeek = days[0];
+  const endOfWeek = days[6];
+  document.getElementById('weekLabel').textContent =
+    `${startOfWeek.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${endOfWeek.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`;
+
+  const grid = document.getElementById('weekGrid');
+  const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  grid.innerHTML = days.map((d, i) => {
+    const isToday = d.getTime() === today.getTime();
+    const key = d.toDateString();
+    const weekData = state.weekly.days[key] || {};
+    const acts = weekData.activities || [];
+    const doneCount = acts.filter(a => a.done).length;
+    const hasData = acts.length > 0;
+    return `<div class="day-col ${isToday ? 'today' : ''} ${hasData ? 'has-completed' : ''}" onclick="showDayDetail(${i})">
+      <div class="day-name">${dayNames[i]}</div>
+      <div class="day-num">${d.getDate()}</div>
+      ${hasData ? `<div class="day-completion">${doneCount}/${acts.length} ✓</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+function showDayDetail(idx) {
+  const days = getWeekDates(currentWeekOffset);
+  const d = days[idx];
+  const key = d.toDateString();
+  const dayData = state.weekly.days[key] || { activities: [] };
+  const acts = dayData.activities || [];
+
+  document.getElementById('dayDetailTitle').textContent = d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  document.getElementById('dayDetail').style.display = 'block';
+
+  const list = document.getElementById('dayActivitiesList');
+  if (acts.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;padding:0.5rem 0;">No activities logged this day.</div>';
+  } else {
+    list.innerHTML = acts.map(a => `
+      <div class="activity-item">
+        <div class="activity-check ${a.done ? 'done' : ''}"></div>
+        <div class="activity-info">
+          <div class="activity-name">${a.name}</div>
+          ${a.notes ? `<div class="activity-note">${a.notes}</div>` : ''}
+        </div>
+      </div>`).join('');
+  }
+}
+
+function changeWeek(dir) {
+  currentWeekOffset += dir;
+  renderWeekly();
+}
+
+// ============================================================
+// GOALS
+// ============================================================
+function renderGoals() {
+  const list = document.getElementById('goalsList');
+  if (state.goals.items.length === 0) {
+    list.innerHTML = PRESET_GOALS.map((g, i) => `
+      <div class="goal-item">
+        <div class="goal-circle ${state.goals.items[i]?.done ? 'done' : ''}" onclick="toggleGoal(${i})"></div>
+        <div class="goal-info">
+          <div class="goal-text">${g.text}</div>
+          <div class="goal-sub">${g.sub}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    list.innerHTML = state.goals.items.map((g, i) => `
+      <div class="goal-item">
+        <div class="goal-circle ${g.done ? 'done' : ''}" onclick="toggleGoal(${i})"></div>
+        <div class="goal-info ${g.done ? 'done' : ''}">
+          <div class="goal-text">${g.text}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  const habitsEl = document.getElementById('spiritualHabits');
+  const todayKey = new Date().toDateString();
+  habitsEl.innerHTML = SPIRITUAL_HABITS.map((h, i) => {
+    const done = state.goals.habits && state.goals.habits[todayKey] && state.goals.habits[todayKey][i];
+    return `<div class="goal-item" style="cursor:pointer;" onclick="toggleHabit(${i})">
+      <div class="goal-circle ${done ? 'done' : ''}">${done ? '✓' : h.emoji}</div>
+      <div class="goal-info ${done ? 'done' : ''}"><div class="goal-text">${h.name}</div></div>
+    </div>`;
+  }).join('');
+
+  // Progress
+  const totalHabits = SPIRITUAL_HABITS.length * 7;
+  const doneHabits = Object.values(state.goals.habits || {}).reduce((sum, day) => sum + Object.values(day).filter(Boolean).length, 0);
+  const pct = Math.round((doneHabits / totalHabits) * 100);
+  document.getElementById('goalsProgress').innerHTML = `
+    <div style="font-size:0.85rem;margin-bottom:0.5rem;">This week: ${doneHabits}/${totalHabits} habits completed</div>
+    <div class="goal-progress"><div class="goal-progress-fill" style="width:${pct}%"></div></div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:0.3rem;">${pct}% weekly completion</div>`;
+}
+
+function addGoal() {
+  const text = document.getElementById('newGoalText').value.trim();
+  if (!text) return;
+  state.goals.items.push({ text, done: false });
+  saveState();
+  renderGoals();
+  document.getElementById('newGoalText').value = '';
+}
+
+function toggleGoal(idx) {
+  if (!state.goals.items[idx]) return;
+  state.goals.items[idx].done = !state.goals.items[idx].done;
+  saveState();
+  renderGoals();
+}
+
+function addHabit() {
+  const text = document.getElementById('newHabitText').value.trim();
+  if (!text) return;
+  SPIRITUAL_HABITS.push({ name: text, emoji: '✨' });
+  saveState();
+  renderGoals();
+  document.getElementById('newHabitText').value = '';
+}
+
+function toggleHabit(idx) {
+  const todayKey = new Date().toDateString();
+  if (!state.goals.habits) state.goals.habits = {};
+  if (!state.goals.habits[todayKey]) state.goals.habits[todayKey] = {};
+  state.goals.habits[todayKey][idx] = !state.goals.habits[todayKey][idx];
+  saveState();
+  renderGoals();
+}
+
+// ============================================================
+// DEVOTIONAL
+// ============================================================
+function renderDevotional() {
+  const catsEl = document.getElementById('devCategories');
+  catsEl.innerHTML = DEV_CATEGORIES.map(c => `
+    <button class="dev-cat-btn" onclick="selectDevCategory('${c.name}')">
+      <span class="cat-emoji">${c.emoji}</span>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${c.count} devotionals</div>
+    </button>`).join('');
+}
+
+function selectDevCategory(name) {
+  const verses = {
+    'Prayer': { ref: 'Philemon 1:6', text: '...that the sharing of your faith may become effective for the complete knowledge of every good thing that is in us toward Christ.' },
+    'Faith': { ref: ' Hebrews 11:1', text: 'Now faith is the assurance of things hoped for, the conviction of things not seen.' },
+    'Work': { ref: 'Colossians 3:23-24', text: 'Whatever you do, work heartily, as for the Lord and not for men... You are serving the Lord Christ.' },
+    'Perseverance': { ref: 'Romans 5:3-4', text: 'We rejoice in our sufferings, knowing that suffering produces endurance, and endurance produces character, and character produces hope.' },
+    'Love': { ref: '1 John 4:19', text: 'We love because He first loved us.' },
+    'Peace': { ref: 'Philippians 4:6-7', text: 'Be anxious for nothing, but in everything by prayer and supplication with thanksgiving let your requests be made known to God.' },
+    'Purpose': { ref: 'Ephesians 2:10', text: 'For we are His workmanship, created in Christ Jesus for good works, which God prepared beforehand that we should walk in them.' },
+    'Holiness': { ref: '1 Peter 1:15-16', text: 'As He who called you is holy, you also be holy in all your conduct, because it is written, "Be holy, for I am holy."' },
+  };
+  const v = verses[name] || verses['Faith'];
+  const output = document.getElementById('devotionalOutput');
+  output.style.display = 'block';
+  output.innerHTML = `
+    <h3>${name} — Daily Devotional</h3>
+    <div class="scripture-card" style="margin:1rem 0;">
+      <div class="scripture-text">"${v.text}"</div>
+      <div class="scripture-ref">— ${v.ref}</div>
+    </div>
+    <div class="dev-reflection">
+      <strong>Reflection:</strong> Take a moment to sit with this ${name.toLowerCase()} truth. How is God speaking to you today through this verse? What is one action He might be calling you to take?
+    </div>
+    <div class="dev-prayer">
+      <strong>🙏 Prayer:</strong> Lord, help me walk in ${name.toLowerCase()} today. Draw me closer to You. In Jesus' name, Amen.
+    </div>
+  `;
+  showPage('devotional');
+}
+
+function generateDevotional() {
+  const input = document.getElementById('freeformInput').value.trim();
+  if (!input) return;
+  document.getElementById('devLoadingState').style.display = 'block';
+  document.getElementById('devotionalOutput').style.display = 'none';
+  showPage('devotional');
+
+  setTimeout(() => {
+    document.getElementById('devLoadingState').style.display = 'none';
+    document.getElementById('devotionalOutput').style.display = 'block';
+    document.getElementById('devotionalOutput').innerHTML = `
+      <h3>Devotional: ${input}</h3>
+      <div class="dev-reflection" style="margin-top:1rem;">
+        <p><em>(This is a guided reflection on "${input}")</em></p>
+        <p style="margin-top:0.75rem;">Take 5-10 minutes in silence. Read the scripture below slowly. Let God speak to you through His Word. Write down any thought, conviction, or encouragement that comes to mind.</p>
+        <p style="margin-top:0.75rem;font-weight:600;">Scripture: Philippians 4:8 — "Finally, brothers, whatever is true, whatever is honorable, whatever is just, whatever is pure, whatever is lovely, whatever is commendable, if there is any excellence, if there is anything worthy of praise, think about these things."</p>
+      </div>
+      <div class="dev-prayer">
+        <strong>🙏 Prayer:</strong> Lord, help me fix my mind on what is true and lovely. Guide my thoughts toward You today. In Jesus' name, Amen.
+      </div>
+      <div style="margin-top:1rem;font-size:0.8rem;color:var(--muted);font-style:italic;">Note: This is a placeholder reflection. For a full AI-powered devotional, ask Tobias!</div>
+    `;
+    document.getElementById('freeformInput').value = '';
+  }, 1500);
+}
+
+// ============================================================
+// BIBLE
+// ============================================================
+function renderBible() {
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const verse = CORE_VERSES[dayOfYear % CORE_VERSES.length];
+  document.getElementById('bibleDailyRef').textContent = verse;
+  document.getElementById('bibleDailyText').textContent = 'Ask me to look up this verse!';
+
+  document.getElementById('coreVersesList').innerHTML = CORE_VERSES.map(v =>
+    `<div style="padding:0.5rem 0;border-bottom:1px solid var(--border);font-size:0.85rem;cursor:pointer;" onclick="lookupVerseFor('${v}')">📖 ${v}</div>`
+  ).join('');
+}
+
+const NASB_VERSES = {
+  'John 3:16': '"For God so loved the world, that He gave His only begotten Son, that whoever believes in Him shall not perish, but have eternal life."',
+  'Romans 3:23': '"For all have sinned and fall short of the glory of God."',
+  'Romans 6:23': '"For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord."',
+  'Romans 10:9': '"That if you confess with your mouth Jesus as Lord, and believe in your heart that God raised Him from the dead, you shall be saved."',
+  'Romans 12:2': '"And do not be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what the will of God is, that which is good and acceptable and perfect."',
+  'Ephesians 2:8-9': '"For by grace you have been saved through faith; and that not of yourselves, it is the gift of God; not as a result of works, so that no one may boast."',
+  'Philippians 1:6': '"For I am confident of this very thing, that He who began a good work in you will perfect it until the day of Christ Jesus."',
+  'Philippians 4:13': '"I can do all things through Him who strengthens me."',
+  'Colossians 3:23': '"Whatever you do, do your work heartily, as for the Lord rather than for men."',
+  '1 Peter 2:9': '"But you are a chosen race, a royal priesthood, a holy nation, a people for God\'s own possession, so that you may proclaim the excellencies of Him who called you out of darkness into His marvelous light."',
+  '1 John 4:19': '"We love, because He first loved us."',
+  'Isaiah 40:31': '"Yet those who wait for the Lord will gain new strength; they will mount up with wings like eagles; they will run and not get tired; they will walk and not become weary."',
+  'Psalm 23:1': '"The Lord is my shepherd, I shall not want."',
+  'Proverbs 3:5': '"Trust in the Lord with all your heart and do not lean on your own understanding."',
+  'Matthew 11:28': '"Come to Me, all who are weary and heavy-laden, and I will give you rest."',
+  'James 1:22': '"But prove yourselves doers of the word, and not merely hearers who delude themselves."',
+};
+
+function lookupVerse() {
+  const input = document.getElementById('bibleLookupInput').value.trim();
+  lookupVerseFor(input);
+}
+
+function lookupVerseFor(ref) {
+  const resultEl = document.getElementById('bibleLookupResult');
+  const cleanRef = ref.replace(/[「」『』]/g, '').trim();
+  const verse = NASB_VERSES[cleanRef];
+
+  if (verse) {
+    resultEl.innerHTML = `<div class="bible-result"><div class="verse-text">${verse}</div><div class="verse-ref">— ${cleanRef} (NASB)</div></div>`;
+  } else {
+    resultEl.innerHTML = `<div class="bible-result"><div style="color:var(--muted);font-size:0.85rem;">"${cleanRef}" — I don't have this verse memorized yet. Try one of the Core Verses below, or ask Tobias to look it up!</div></div>`;
+  }
+  document.getElementById('bibleLookupInput').value = cleanRef;
+}
+
+// ============================================================
+// WORKOUTS
+// ============================================================
+let currentWorkoutDay = 0;
+
+function renderWorkouts() {
+  const todayDow = new Date().getDay(); // 0=Sun
+  currentWorkoutDay = (todayDow === 0) ? 6 : todayDow - 1; // Mon=0
+
+  const tabs = document.getElementById('workoutDayTabs');
+  tabs.innerHTML = WORKOUT_DAYS.map((d, i) =>
+    `<button class="wtab ${i === currentWorkoutDay ? 'active' : ''}" onclick="selectWorkoutDay(${i})">${d}</button>`
+  ).join('');
+
+  renderWorkoutContent();
+}
+
+function selectWorkoutDay(idx) {
+  currentWorkoutDay = idx;
+  document.querySelectorAll('.wtab').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  renderWorkoutContent();
+}
+
+function renderWorkoutContent() {
+  const day = WORKOUT_DAYS[currentWorkoutDay];
+  const exercises = WORKOUTS[day];
+  const isRest = day === 'Rest';
+
+  const content = document.getElementById('workoutContent');
+  if (isRest || !exercises || !exercises[0].sets) {
+    content.innerHTML = `<div style="text-align:center;padding:2rem;">
+      <div style="font-size:2rem;">😌</div>
+      <div style="font-size:1rem;font-weight:600;margin:0.5rem 0;color:var(--primary-dark);">Rest Day</div>
+      <div style="font-size:0.85rem;color:var(--muted);">Active recovery: walk, stretch, foam roll, or just rest.</div>
+      <div style="margin-top:1rem;">
+        <span class="cond-it">Optional: Light cardio</span>
+      </div>
+    </div>`;
+    return;
+  }
+
+  content.innerHTML = `
+    <h4 style="font-family:Merriweather,serif;font-size:0.95rem;color:var(--primary-dark);margin-bottom:0.75rem;">${day} — Strength</h4>
+    ${exercises.map(e => `
+      <div class="workout-exercise">
+        <span>${e.name}</span>
+        <span class="workout-sets">${e.sets}</span>
+      </div>`).join('')}
+    ${COND_WODS.length > 0 ? `<div style="margin-top:1rem;"><span class="cond-it">Optional Conditioning</span></div>
+    <div style="font-size:0.82rem;color:var(--muted);margin-top:0.4rem;">${COND_WODS.join(' · ')}</div>` : ''}
+    <button onclick="logWorkout('${day}')" style="width:100%;margin-top:1rem;padding:0.65rem;background:var(--success);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;">✓ Log This Workout</button>
+  `;
+}
+
+function logWorkout(dayName) {
+  const today = new Date().toDateString();
+  state.workouts.log.push({ date: today, workout: dayName });
+  saveState();
+  renderWorkoutLog();
+  alert(`${dayName} logged! Great work 🏃`);
+}
+
+function renderWorkoutLog() {
+  const logEl = document.getElementById('workoutLog');
+  const thisWeek = getWeekDates(0);
+  const weekDates = thisWeek.map(d => d.toDateString());
+  const thisWeekLogs = state.workouts.log.filter(l => weekDates.includes(l.date));
+
+  if (thisWeekLogs.length === 0) {
+    logEl.innerHTML = '<div style="color:var(--muted);font-size:0.85rem;">No workouts logged this week yet.</div>';
+    return;
+  }
+  logEl.innerHTML = thisWeekLogs.slice(-7).reverse().map(l =>
+    `<div style="padding:0.4rem 0;border-bottom:1px solid var(--border);font-size:0.82rem;">
+      <span style="color:var(--success);font-weight:600;">✓</span> ${l.date}: ${l.workout}
+    </div>`
+  ).join('');
+}
+
+// ============================================================
+// RECIPES
+// ============================================================
+function renderRecipes() {
+  const list = document.getElementById('recipeList');
+  list.innerHTML = RECIPES.map(r => `
+    <div class="recipe-card">
+      <h4>${r.name}</h4>
+      <p>${r.desc}</p>
+      <div style="margin-top:0.4rem;">${r.tags.map(t => `<span style="font-size:0.7rem;background:var(--bg);padding:0.15rem 0.4rem;border-radius:4px;margin-right:0.3rem;color:var(--muted);">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// PERSISTENCE
+// ============================================================
+function saveState() {
+  try { localStorage.setItem('runtherace_v1', JSON.stringify(state)); } catch(e) {}
+}
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem('runtherace_v1');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // Merge with defaults (don't overwrite new keys)
+      if (parsed.daily) state.daily = parsed.daily;
+      if (parsed.weekly) state.weekly = parsed.weekly;
+      if (parsed.goals) state.goals = parsed.goals;
+      if (parsed.workouts) state.workouts = parsed.workouts;
+      if (parsed.appOpen) state.appOpen = parsed.appOpen;
+    }
+  } catch(e) {}
+  if (state.appOpen) {
+    document.getElementById('mainNav').style.display = 'flex';
+    document.getElementById('page-landing').classList.remove('active');
+  }
+}
+
+function getTodayKey() {
+  return new Date().toDateString();
+}
+
+// ============================================================
+// BOOT
+// ============================================================
+init();
+</script>
+</body>
+</html>
